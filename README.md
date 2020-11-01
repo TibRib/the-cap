@@ -1,10 +1,20 @@
-![alt text](https://github.com/TibRib/the-cap/blob/main/THE_CAP.png?raw=true)
+![The cap banner](img/THE_CAP.png)
 
-Meet **the CAP** (Comment Analyse Predict) !
+# Meet ```the CAP```
 
-the CAP (Comment Analyse Predict) is a student's project aimed toward the real-time analysis of sport games.
+```the CAP``` is a **student project** aimed toward the <ins>real-time</ins> analysis of **sport games**.
+
+Its name comes from its main purpose : **Comment, Analyse, Predict**.
+
+
 
 ## Featuring
+
+### Comments
+
+- Lifelike voiced robot
+- Real-time reactions to the events in game
+- Auto messaging
 
 ### Image Analysis
 
@@ -15,9 +25,3 @@ the CAP (Comment Analyse Predict) is a student's project aimed toward the real-t
 
 - Real-time diagnostics while the game is playing
 - First-hand estimations of the winning chances thanks to data-mining
-
-### Comments
-
-- Lifelike voiced robot
-- Real-time reactions to the events in game
-- Auto messaging
