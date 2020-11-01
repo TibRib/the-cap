@@ -1,3 +1,5 @@
+![alt text](https://github.com/TibRib/the-cap/blob/main/THE_CAP.png?raw=true)
+
 Meet **the CAP** (Comment Analyse Predict) !
 
 the CAP (Comment Analyse Predict) is a student's project aimed toward the real-time analysis of sport games.
