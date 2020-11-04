@@ -21,7 +21,7 @@ Its name comes from its main purpose : **Comment, Analyse, Predict**.
 - Determine who currently has the ball
 - Able to locate players and others in space
 
-### Prediction
+### Live Prediction
 
 - Real-time diagnostics while the game is playing
 - First-hand estimations of the winning chances thanks to data-mining
