@@ -1,0 +1,16 @@
+Required : (Tested with Nvidia 455 drivers)
+NVIDIA GPU
+Nvidia proprietary drivers(455, Cuda included)
+Linux Native
+Docker
+nvidia containers runtime: 
+	curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | sudo apt-key add - && distribution=$(. /etc/os-release;echo $ID$VERSION_ID) && curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list |    sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list && sudo apt-get update && sudo apt-get install nvidia-container-runtime
+
+
+
+RUN VIRTUAL DISPLAY
+sudo xhost +
+
+RUN WEBCAM DARKNET LIVE DEMO:
+sudo docker run --name yolo -it -e DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix --device /dev/video0 --gpus all --rm yolo:0.1 ./darknet detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights -c 0
+
