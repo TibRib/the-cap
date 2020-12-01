@@ -15,7 +15,7 @@ Testing (CPU) :
        $ docker run --name yoloTest -it -e DISPLAY=$DISPLAY --rm yolo:0.1 ./darknet detect cfg/yolov4.cfg yolov4.weights data/dog.jpg
   On windows:
        1- You need to set up a virtual display server using xming
-       2- check your ethernet ip using ipconfig in cmd 
+       2- check your vEthernet(Default Switch) ip using ipconfig in cmd 
        3- launch xming (xlaunch) onto the display id 0
        $ docker run --name yoloTest -it -e DISPLAY=YOUR_IP:0.0 --rm yolo:0.1 ./darknet detect cfg/yolov4.cfg yolov4.weights data/dog.jpg
 
