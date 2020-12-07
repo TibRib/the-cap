@@ -2,7 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
+	"sync"
 )
 
 type Data struct {
@@ -23,7 +25,36 @@ func mockupData() Data {
 	return data
 }
 
-func requestHandler(w http.ResponseWriter, r *http.Request) {
+//Server API Handlers Object
+type API_Handlers struct {
+	sync.Mutex
+	myData Data
+}
+
+//Creates a new API_Handler object (constructor)
+func newAPI_Handler() *API_Handlers {
+	return &API_Handlers{}
+}
+
+//Redirects method to get or post handler
+func (h *API_Handlers) request(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+		h.get(w, r)
+		return
+	case "POST":
+		h.post(w, r)
+		return
+
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write([]byte("Method not allowed."))
+		return
+	}
+}
+
+//Get function of API_Handlers
+func (h *API_Handlers) get(w http.ResponseWriter, r *http.Request) {
 	//Retrieve data from a function
 	var data Data = mockupData()
 	//Turn into JSON
@@ -38,8 +69,28 @@ func requestHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonBytes)
 }
 
+//POST function of API_Handlers
+func (h *API_Handlers) post(w http.ResponseWriter, r *http.Request) {
+	bodyBytes, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+	}
+	var inData Data
+	err = json.Unmarshal(bodyBytes, &inData)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+	}
+	h.Lock()
+	h.myData = inData
+	defer h.Unlock()
+}
+
 func main() {
-	http.HandleFunc("/request", requestHandler)
+	var APIHandler = newAPI_Handler()
+	http.HandleFunc("/request", APIHandler.request)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		panic(err)
