@@ -65,6 +65,7 @@ func (h *API_Handlers) get(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
+		return
 	}
 
 	w.Header().Add("content-type", "application/json")
@@ -79,12 +80,22 @@ func (h *API_Handlers) post(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
+		return
 	}
+
+	content_type := r.Header.Get("content-type")
+	if content_type != "application/json" {
+		w.WriteHeader(http.StatusUnsupportedMediaType)
+		w.Write([]byte(fmt.Sprintf("The API requires a json content-type, but got a '%s' instead", content_type)))
+		return
+	}
+
 	var inData Data
 	err = json.Unmarshal(bodyBytes, &inData)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
+		return
 	}
 	h.Lock()
 	h.myData = inData //Changes the data in memory with the one received
