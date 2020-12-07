@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"sync"
@@ -16,13 +17,12 @@ type Data struct {
 
 //Data mocking used for providing the latter structured response
 func mockupData() Data {
-	var data Data = Data{
+	return Data{
 		Name:    "Test",
 		Surname: "TestSurname",
-		PosX:    20,
-		PosY:    40,
+		PosX:    0,
+		PosY:    0,
 	}
-	return data
 }
 
 //Server API Handlers Object
@@ -33,10 +33,10 @@ type API_Handlers struct {
 
 //Creates a new API_Handler object (constructor)
 func newAPI_Handler() *API_Handlers {
-	return &API_Handlers{}
+	return &API_Handlers{myData: mockupData()} //Inits with the mockupData
 }
 
-//Redirects method to get or post handler
+//Redirects method to GET, POST and other allowed methods
 func (h *API_Handlers) request(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
@@ -55,8 +55,11 @@ func (h *API_Handlers) request(w http.ResponseWriter, r *http.Request) {
 
 //Get function of API_Handlers
 func (h *API_Handlers) get(w http.ResponseWriter, r *http.Request) {
-	//Retrieve data from a function
-	var data Data = mockupData()
+	//Read data
+	h.Lock()
+	data := h.myData
+	h.Unlock()
+
 	//Turn into JSON
 	jsonBytes, err := json.Marshal(data)
 	if err != nil {
@@ -84,8 +87,9 @@ func (h *API_Handlers) post(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 	}
 	h.Lock()
-	h.myData = inData
+	h.myData = inData //Changes the data in memory with the one received
 	defer h.Unlock()
+	fmt.Println("received post data", inData)
 }
 
 func main() {
