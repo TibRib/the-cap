@@ -14,3 +14,13 @@ sudo xhost +
 RUN WEBCAM DARKNET LIVE DEMO:
 sudo docker run --name yolo -it -e DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix --device /dev/video0 --gpus all --rm yolo:0.1 ./darknet detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights -c 0
 
+
+RUN VIDEO DARKNET DEMO:
+sudo docker run --name yolo -it -e DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix --gpus all --rm yolo:0.1  ./darknet detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights -ext_output video.mp4
+
+RUN ONLINE VIDEO DARKNET DEMO:
+docker run --name yolo -it -e DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix --gpus all --rm yolo:0.1 ./darknet detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights http://mediamusic-journal.com/video/SherlockHolmes%20(1979).mp4 -i 0
+
+
+
+
