@@ -1,0 +1,3 @@
+import Athlete
+
+dude = Athlete()
