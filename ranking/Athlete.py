@@ -83,6 +83,9 @@ class Athlete:
                 self.rank += int(k * (0 - self.chanceOfWinning(opponent) / 100))
 
     def chanceOfWinning(self, opponnent):
+        '''
+        Give the chance of winning the opponent in %
+        '''
         power = (opponnent.rank - self.rank) / 400
         res = 1 / (1 + pow(10, power)) * 100
         return round(res, 2)
