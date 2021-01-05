@@ -8,7 +8,7 @@ ARG mode=cpu
 FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04 AS base
 ENV DEBIAN_FRONTEND noninteractive
 # Install OPENCV dependencies
-RUN apt-get update && apt-get install -y git pkg-config libopencv-dev
+RUN apt-get update && apt-get install -y git pkg-config libopencv-dev wget
 # Add stable cuda developper library
 RUN apt-get install -y libcuda1-340
 # Clone Darknet Image Recognition Repo in our container
@@ -31,19 +31,17 @@ RUN echo "VERSION is set to ${VERSION}"
 COPY yolov4.weights /root/darknet/yolov4.weights
 # Compile Darknet with GCC
 RUN make
-# Copy the server app local sources
-COPY API_server /root/darknet/API_server
 ## GO language Installation
 RUN mkdir /root/downloads && cd /root/downloads
 RUN wget https://golang.org/dl/go1.15.6.linux-amd64.tar.gz
 RUN sha256sum go1.15.6.linux-amd64.tar.gz
 RUN tar xvf go1.15.6.linux-amd64.tar.gz
 RUN chown -R root:root ./go
-RUN mv go /root/go
-RUN export GOROOT=/root/go
-RUN GOPATH=root/gowork
+RUN mv go /usr/local
 RUN mkdir /root/gowork
-RUN export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+ENV PATH "$PATH:/usr/local/go/bin"
+# Copy the server app local sources
+COPY API_server /root/darknet/API_server
 # Move to the server
 WORKDIR /root/darknet/API_server
 # Download Go dependencies.
