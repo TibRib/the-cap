@@ -25,11 +25,13 @@ type DetectedObject struct {
 
 type Data struct{ //TODO : Add headers
 	NbObjects int
-	Detected []DetectedObject `json:"detected`
+	MediaUrl string `json:"media_url"`
+	Detected []DetectedObject `json:"detected"`
 }
 
 type APIData struct{
-	NbObjects int `json:"nb_objects`
+	NbObjects int `json:"nb_objects"`
+	MediaToAnalyze string `json:"media_url"`
 }
 
 //Global labels
@@ -51,7 +53,7 @@ func mockupData(nbObjects int) Data {
 	for i := 0; i < nbObjects; i++ {
 		detectedObjects = append(detectedObjects, randomObject(i))
 	}
-	data := Data{ nbObjects, detectedObjects }
+	data := Data{ NbObjects: nbObjects, MediaUrl:"", Detected: detectedObjects }
 	return data
 }
 
@@ -91,6 +93,7 @@ func (h *API_Handlers) get(w http.ResponseWriter, r *http.Request) {
 	h.Unlock()
 	
 	data := mockupData(apiData.NbObjects)
+	data.MediaUrl = apiData.MediaToAnalyze
 
 	//Turn into JSON
 	jsonBytes, err := json.Marshal(data)
@@ -140,7 +143,7 @@ func (h *API_Handlers) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("NBObjects: %v", inData.NbObjects)
+	fmt.Printf("NBObjects: %v\n", inData.NbObjects)
 	
 	h.Lock()
 	h.myData = inData //Changes the data in memory with the one received
