@@ -8,18 +8,20 @@ This GUIDE is purely about debugging, and not forgetting how to launch properly 
 
 ## Versions -- How to build
 There are two versions of the image, embedded as layers into the one big **Dockerfile**.
-**CPU** : DEFAULT version, use it if you either do not have a linux installation with nvidia containers runtime or if you use a classic windows installation
-**GPU** : Required for Video processing. *Oh boy this one is complicated...*
+- **CPU** : DEFAULT version, use it if you either do not have a linux installation with nvidia containers runtime or if you use a classic windows installation
+- **GPU** : Required for Video processing. *Oh boy this one is complicated...*
 ### GPU Version requirements
 **Required** : an NVIDIA Graphics Card
 
 **Linux (Ubuntu) environment** : 
+
 You need Docker, and the nvidia containers runtime dependencies 
 *(Just execute the following long command to install all of the dependencies)*
 
     curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | sudo apt-key add - && distribution=$(. /etc/os-release;echo $ID$VERSION_ID) && curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list |    sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list && sudo apt-get update && sudo apt-get install nvidia-container-runtime
 
 **Windows environment** : ***[Warning: For advanced users only!]***
+
 Running CUDA applications under containers under WSL2 backend is theoritically not supported. But as of this update, the Docker team has made it available in one of its beta builds (Dec. 21 2020) https://www.docker.com/blog/wsl-2-gpu-support-is-here/
 So, in order for you to run the gpu processing on Windows, you will need:
 
@@ -68,6 +70,7 @@ This command allows you to run the recognition in real time on your webcam, -if 
 
 
 **RUN VIDEO DARKNET DEMO:** ⚠️ -- Requires GPU version  -- ⚠️
+
 This command allows you to run the recognition in real time on a local video footage
 
     docker run --name yolo -it -e DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix --gpus all --rm yolo:0.1  ./darknet detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights -ext_output MY_FOOTAGE.mp4
@@ -116,6 +119,7 @@ With GPU mode containers :
     docker run --name yolo -it -e DISPLAY=MY_IP:0.0 --gpus all --rm yolo:0.1 ./darknet detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights -ext_output MY_VIDEO.mp4
 
 **RUN ONLINE VIDEO DARKNET DEMO:** ⚠️ -- Requires GPU version  -- ⚠️
+
 Try with a video such as http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4
 *Tested with mp4, avi files*.
 
