@@ -7,5 +7,5 @@ setup(name='theCap',
       author='team',
       author_email='-',
       license='MIT',
-      packages=['ranking', 'ranking/api'],
+      packages=['ranking', 'api'],
       zip_safe=False)

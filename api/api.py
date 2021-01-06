@@ -17,7 +17,7 @@ def home():
 
 
 # A route to return all of the available entries in our catalog.
-@app.route('/api/v1/resources/athletes/all', methods=['GET'])
+@app.route('/api/athletes/all', methods=['GET'])
 def api_all():
     return jsonify(athletes)
 
