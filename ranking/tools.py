@@ -43,8 +43,10 @@ def updateCSV(path, athlete_list):
                         row['bestPoints'] = row['points']
                         row['pointsDiff'] = int(athlete.rank) - old_points
                         row['bestPointsDate'] = date.today()
-
-            row = {'rank':row['rank'], 'name': row['name'].replace(' ', '_'), 'country_name': row['country_name'].replace(' ', '_'),'country_id': row['country_id'],'points': row['points'],'bestRank': row['bestRank'],'bestRankDate': row['bestRankDate'],'rankDiff': row['rankDiff'],'pointsDiff': row['pointsDiff'],'bestPoints': row['bestPoints'], 'bestPointsDate': row['bestPointsDate']}
+            if row['points'] != 'points':
+                row = {'rank':row['rank'], 'name': row['name'].replace(' ', '_'), 'country_name': row['country_name'].replace(' ', '_'),'country_id': row['country_id'],'points': int(row['points']),'bestRank': row['bestRank'],'bestRankDate': row['bestRankDate'],'rankDiff': row['rankDiff'],'pointsDiff': row['pointsDiff'],'bestPoints': row['bestPoints'], 'bestPointsDate': row['bestPointsDate']}
+            else:
+                row = {'rank':row['rank'], 'name': row['name'].replace(' ', '_'), 'country_name': row['country_name'].replace(' ', '_'),'country_id': row['country_id'],'points': row['points'],'bestRank': row['bestRank'],'bestRankDate': row['bestRankDate'],'rankDiff': row['rankDiff'],'pointsDiff': row['pointsDiff'],'bestPoints': row['bestPoints'], 'bestPointsDate': row['bestPointsDate']}
             writer.writerow(row)
             i+=1
 
@@ -71,7 +73,6 @@ def initAthleteFromCSV(path, ath_name):
         reader = csv.reader(infile)
         for row in reader:
             if row[1] == ath_name:
-                print(row[4])
                 return athlete.Athlete(name=ath_name, rank=row[4])
                 
     return athlete.Athlete()
