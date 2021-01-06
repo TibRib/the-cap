@@ -53,7 +53,10 @@ def fromCSVtoJSON(path):
     """
     Return a dict to be used in flask, of the rankings.
     """
+    array = []
     with open(path, mode='r') as infile:
         reader = csv.reader(infile)
-        mydict = {rows[0]:rows[1] for rows in reader}
-    return mydict
+        for row in reader:
+            player = {'rank':row[0], 'name':row[1], 'country_name':row[2], 'country_id':row[3], 'points':row[4], 'bestRank':row[5], 'bestRankDate':row[6], 'rankDiff':row[7], 'pointsDiff':row[8], 'bestPoints':row[9], 'bestPointsDate':row[10]}
+            array.append(player)
+    return array 
