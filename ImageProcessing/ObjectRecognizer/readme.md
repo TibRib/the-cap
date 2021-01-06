@@ -69,6 +69,17 @@ This command allows you to run the recognition in real time on your webcam, -if 
     docker run --name yolo -it -e DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix --device /dev/video0 --gpus all --rm yolo:0.1 ./darknet detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights -c 0
 
 
+**RUN SINGLE IMAGE DETECTION**
+
+With CPU mode containers : 
+    
+    docker run --name yolo -it -e DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix --rm yolo:0.1 ./darknet detect cfg/yolov4.cfg yolov4.weights data/dog.jpg
+
+With GPU mode containers : 
+    
+    docker run --name yolo -it --gpus all -e DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix --rm yolo:0.1 ./darknet detect cfg/yolov4.cfg yolov4.weights data/dog.jpg
+
+
 **RUN VIDEO DARKNET DEMO:** ⚠️ -- Requires GPU version  -- ⚠️
 
 This command allows you to run the recognition in real time on a local video footage
@@ -104,14 +115,16 @@ Carte Ethernet vEthernet (WSL) :
 
 ``` 
 Here my IP is **172.30.16.1**, do the same with your setup. and write down this IP. (Will be described as MY_IP in the following commands).
+
 **RUN SINGLE IMAGE DETECTION**
+
 With CPU mode containers : 
     
     docker run --name yoloTest -it -e DISPLAY=MY_IP:0.0 --rm yolo:0.1 ./darknet detect cfg/yolov4.cfg yolov4.weights data/dog.jpg
 
 With GPU mode containers : 
     
-    docker run --gpus=1 --name yoloTest -it -e DISPLAY=MY_IP:0.0 --rm yolo:0.1 ./darknet detect cfg/yolov4.cfg yolov4.weights data/dog.jpg
+    docker run --gpus all --name yoloTest -it -e DISPLAY=MY_IP:0.0 --rm yolo:0.1 ./darknet detect cfg/yolov4.cfg yolov4.weights data/dog.jpg
 
 
 **RUN VIDEO DARKNET DEMO:** ⚠️ -- Requires GPU version  -- ⚠️
@@ -124,5 +137,11 @@ Try with a video such as http://commondatastorage.googleapis.com/gtv-videos-buck
 *Tested with mp4, avi files*.
 
     docker run --name yolo -it -e DISPLAY=MY_IP:0.0 --gpus all --rm yolo:0.1 ./darknet detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights MY_VIDEO_URL -i 0
+
+### Experimental : 
+
+Run onlide video darknet demo with JSON output as a stream on port 8070:
+
+    docker run --name yolo -p 127.0.0.1:8070:8070 -it -e DISPLAY=MY_IP:0.0 --gpus all --rm yologpu:0.1 ./darknet detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights MY_VIDEO_URL -i 0 -json_port 8070
 
 
