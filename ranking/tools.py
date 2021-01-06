@@ -1,4 +1,5 @@
 import csv, shutil
+from ranking import athlete
 from ranking.athlete import Athlete
 from tempfile import NamedTemporaryFile
 from datetime import date, time, datetime
@@ -43,7 +44,7 @@ def updateCSV(path, athlete_list):
                         row['pointsDiff'] = int(athlete.rank) - old_points
                         row['bestPointsDate'] = date.today()
 
-            row = {'rank':row['rank'], 'name': row['name'], 'country_name': row['country_name'],'country_id': row['country_id'],'points': row['points'],'bestRank': row['bestRank'],'bestRankDate': row['bestRankDate'],'rankDiff': row['rankDiff'],'pointsDiff': row['pointsDiff'],'bestPoints': row['bestPoints'], 'bestPointsDate': row['bestPointsDate']}
+            row = {'rank':row['rank'], 'name': row['name'].replace(' ', '_'), 'country_name': row['country_name'].replace(' ', '_'),'country_id': row['country_id'],'points': row['points'],'bestRank': row['bestRank'],'bestRankDate': row['bestRankDate'],'rankDiff': row['rankDiff'],'pointsDiff': row['pointsDiff'],'bestPoints': row['bestPoints'], 'bestPointsDate': row['bestPointsDate']}
             writer.writerow(row)
             i+=1
 
@@ -60,3 +61,17 @@ def fromCSVtoJSON(path):
             player = {'rank':row[0], 'name':row[1], 'country_name':row[2], 'country_id':row[3], 'points':row[4], 'bestRank':row[5], 'bestRankDate':row[6], 'rankDiff':row[7], 'pointsDiff':row[8], 'bestPoints':row[9], 'bestPointsDate':row[10]}
             array.append(player)
     return array 
+
+
+def initAthleteFromCSV(path, ath_name):
+    """
+    Need to be replaced with DB.
+    """
+    with open(path, mode='r') as infile:
+        reader = csv.reader(infile)
+        for row in reader:
+            if row[1] == ath_name:
+                print(row[4])
+                return athlete.Athlete(name=ath_name, rank=row[4])
+                
+    return athlete.Athlete()

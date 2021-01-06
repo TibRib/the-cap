@@ -1,5 +1,5 @@
 import flask
-from ranking import tools
+from ranking import tools, athlete
 from flask import request, jsonify
 
 
@@ -20,5 +20,17 @@ def home():
 @app.route('/api/athletes/all', methods=['GET'])
 def api_all():
     return jsonify(athletes)
+
+# http://localhost:5000/api/predict/elo/?A_name=Novak_Djokovic&B_name=Rafael_Nadal
+@app.route("/api/predict/elo/")
+def outcome():
+    athA_name = request.args.get("A_name")
+    athB_name = request.args.get("B_name")
+    A = tools.initAthleteFromCSV('/home/azarog/Documents/the-cap/ranking/Rankings.csv', athA_name)
+    B = tools.initAthleteFromCSV('/home/azarog/Documents/the-cap/ranking/Rankings.csv', athB_name)
+    A_win = A.chanceOfWinning(B)
+    B_win = B.chanceOfWinning(A)
+    json = {'prediction':{'A_winner':A_win, 'B_winner':B_win}}
+    return json
 
 app.run()

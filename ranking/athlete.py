@@ -2,7 +2,7 @@ import json
 
 
 class Athlete:
-    def __init__(self, name='athlete_name', sport='athlete_sport', birth_year=1970, rank=-1, win=[], loss=[], draw=[]):
+    def __init__(self, name='athlete_name', sport='athlete_sport', birth_year=1970, rank=1500, win=[], loss=[], draw=[]):
         '''
         Parameters:
             - win, loss and draw are juste the ranking of opponent.
@@ -86,6 +86,6 @@ class Athlete:
         '''
         Give the chance of winning the opponent in %
         '''
-        power = (opponnent.rank - self.rank) / 400
+        power = (int(opponnent.rank) - int(self.rank)) / 400
         res = 1 / (1 + pow(10, power)) * 100
         return round(res, 2)
