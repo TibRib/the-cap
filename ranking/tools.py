@@ -1,7 +1,8 @@
 import csv, shutil
+from ranking.athlete import Athlete
 from tempfile import NamedTemporaryFile
 from datetime import date, time, datetime
-from Athlete import *
+from ranking import *
 
 
 def useCSV(path):
@@ -47,3 +48,12 @@ def updateCSV(path, athlete_list):
             i+=1
 
     shutil.move(tempfile.name, filename)
+
+def fromCSVtoJSON(path):
+    """
+    Return a dict to be used in flask, of the rankings.
+    """
+    with open(path, mode='r') as infile:
+        reader = csv.reader(infile)
+        mydict = {rows[0]:rows[1] for rows in reader}
+    return mydict
