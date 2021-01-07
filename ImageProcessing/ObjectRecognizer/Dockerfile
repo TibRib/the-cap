@@ -11,8 +11,18 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y git pkg-config libopencv-dev wget
 # Add stable cuda developper library
 RUN apt-get install -y libcuda1-340
+## GO language Installation
+RUN mkdir /root/downloads && cd /root/downloads
+RUN wget https://golang.org/dl/go1.15.6.linux-amd64.tar.gz
+RUN sha256sum go1.15.6.linux-amd64.tar.gz
+RUN tar xvf go1.15.6.linux-amd64.tar.gz
+RUN chown -R root:root ./go
+RUN mv go /usr/local
+RUN mkdir /root/gowork
+ENV PATH "$PATH:/usr/local/go/bin"
 # Clone Darknet Image Recognition Repo in our container
-RUN cd /root && git clone https://github.com/AlexeyAB/darknet && cd darknet
+RUN cd /root && git clone https://github.com/TibRib/darknet && cd darknet
+#COPY darknet /root/darknet
 WORKDIR /root/darknet
 
 # -- CPU = DEFAULT BUILD [Inherits BASE] -- #
@@ -31,15 +41,9 @@ RUN echo "VERSION is set to ${VERSION}"
 COPY yolov4.weights /root/darknet/yolov4.weights
 # Compile Darknet with GCC
 RUN make
-## GO language Installation
-RUN mkdir /root/downloads && cd /root/downloads
-RUN wget https://golang.org/dl/go1.15.6.linux-amd64.tar.gz
-RUN sha256sum go1.15.6.linux-amd64.tar.gz
-RUN tar xvf go1.15.6.linux-amd64.tar.gz
-RUN chown -R root:root ./go
-RUN mv go /usr/local
-RUN mkdir /root/gowork
-ENV PATH "$PATH:/usr/local/go/bin"
+# Error inducing lib file removal
+RUN rm /usr/lib/x86_64-linux-gnu/libcuda.so.1
+
 # Copy the server app local sources
 COPY API_server /root/darknet/API_server
 # Move to the server
@@ -51,6 +55,9 @@ RUN go build -o server .
 
 # Expose port 8080 to the host
 EXPOSE 8080
-
+EXPOSE 8070
 # Command to run the server
 CMD ["./server"]
+
+#Go back to darknet (debugging)
+WORKDIR /root/darknet
