@@ -133,7 +133,7 @@ With GPU mode containers :
 
 **RUN ONLINE VIDEO DARKNET DEMO:** ⚠️ -- Requires GPU version  -- ⚠️
 
-Try with a video such as http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4
+Try with a video such as https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4
 *Tested with mp4, avi files*.
 
     docker run --name yolo -it -e DISPLAY=MY_IP:0.0 --gpus all --rm yolo:0.1 ./darknet detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights MY_VIDEO_URL -i 0
