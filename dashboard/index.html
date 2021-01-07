@@ -1,0 +1,40 @@
+<meta charset="UTF-8">
+
+<header>
+  <script type="text/javascript" src="./d3/d3.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+</header>
+
+<body>
+  <canvas id="bar-chart" width="800" height="450"></canvas>
+
+  <script>
+    //this is really cool
+    //ill analyze data with python, send string formatted to js array in order to display
+
+    var win = [30, 40, 10, 20]
+    var sug = [1.55, 4.66, 6.4, 0.1]
+
+    // Bar chart
+    new Chart(document.getElementById("bar-chart"), {
+      type: 'bar',
+      data: {
+        labels: win,
+        datasets: [{
+          label: "sugar % ",
+          backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+          data: sug
+        }]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        title: {
+          display: true,
+          text: 'Predicted world population (millions) in 2050'
+        }
+      }
+    });
+  </script>
+</body>
