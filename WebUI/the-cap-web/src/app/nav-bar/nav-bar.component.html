@@ -1,0 +1,7 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <div>
+      <a *ngFor="let it of navItems" mat-button [routerLink]="'/accounts'"> {{it}} </a>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
