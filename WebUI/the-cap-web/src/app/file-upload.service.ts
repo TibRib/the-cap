@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaderResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -8,9 +8,12 @@ import { map } from 'rxjs/operators';
 })
 export class FileUploadService {
   endpoint = 'destination'
+  bucketName = ""
 
-  constructor(private httpClient : HttpClient) { }
+  constructor(private httpClient : HttpClient) {
+   }
 
+   /*
   UploadHeader() : HttpHeaders{
       let ts = String(Date.now());
       return new HttpHeaders() 
@@ -32,4 +35,5 @@ export class FileUploadService {
   handleError(e: any) {
     throw new Error('Method not implemented.');
   }
+  */
 }
