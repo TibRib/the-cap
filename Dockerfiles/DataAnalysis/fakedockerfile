@@ -1,0 +1,7 @@
+- having a ```python3``` working environement (can be alpine or ubuntu)
+
+- need to run the ```ap/api.py``` (flask server for the api, *automatically* at start of container ?)
+
+- install the requirements that are in ```requirements.txt```
+- an
+- And for the .csv update maybe i'll need to rework on that, if we find a better dataset on kaggle
