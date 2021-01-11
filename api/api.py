@@ -1,13 +1,16 @@
 import flask
+import os 
 from ranking import tools, athlete
 from flask import request, jsonify
 
+cwd = os.getcwd()
+location = cwd+'/ranking/Rankings.csv'
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
 # Create some test data for our catalog in the form of a list of dictionaries.
-athletes = tools.fromCSVtoJSON('/home/azarog/Documents/the-cap/ranking/Rankings.csv')
+athletes = tools.fromCSVtoJSON(location)
 
 
 @app.route('/', methods=['GET'])
@@ -17,7 +20,7 @@ def home():
 
 
 # A route to return all of the available entries in our catalog.
-@app.route('/api/athletes/all', methods=['GET'])
+@app.route('/api/athletes', methods=['GET'])
 def api_all():
     return jsonify(athletes)
 
@@ -26,8 +29,8 @@ def api_all():
 def outcome():
     athA_name = request.args.get("A_name")
     athB_name = request.args.get("B_name")
-    A = tools.initAthleteFromCSV('/home/azarog/Documents/the-cap/ranking/Rankings.csv', athA_name)
-    B = tools.initAthleteFromCSV('/home/azarog/Documents/the-cap/ranking/Rankings.csv', athB_name)
+    A = tools.initAthleteFromCSV(location, athA_name)
+    B = tools.initAthleteFromCSV(location, athB_name)
     A_win = A.chanceOfWinning(B)
     B_win = B.chanceOfWinning(A)
     json = {'prediction':{'A_winner':A_win, 'B_winner':B_win}}
