@@ -15,6 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule} from  '@angular/material/toolbar';
 import { MatCardModule} from  '@angular/material/card';
 import { MatListModule} from  '@angular/material/list';
+import { UploadFormComponent } from './upload-form/upload-form.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { MatListModule} from  '@angular/material/list';
     VideoPlayerComponent,
     UploadboxComponent,
     NavBarComponent,
+    UploadFormComponent,
   ],
   imports: [
     BrowserModule,
