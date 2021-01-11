@@ -36,4 +36,4 @@ def outcome():
     json = {'prediction':{'A_winner':A_win, 'B_winner':B_win}}
     return json
 
-app.run()
+app.run(host="0.0.0.0", port=80)

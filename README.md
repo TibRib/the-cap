@@ -29,5 +29,5 @@ Its name comes from its main purpose : **Comment, Analyse, Predict**.
 # launching dockers :
 - ranking containers : 
   ``` bash
-  sudo docker build . -t py-api:0.1 ; sudo docker run -p 127.0.0.1:8080:5000 -it py-api:0.1
+    sudo docker build . -t py-api:0.1 ; sudo docker run -p 80:80 py-api:0.1 
   ```
