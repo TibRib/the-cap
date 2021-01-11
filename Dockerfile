@@ -9,7 +9,8 @@ COPY . .
 #COPY api .
 #COPY ranking ranking
 
-RUN pip3 install .
-CMD [ "python", "./api/api.py" ]
 
-EXPOSE 5000
+RUN pip3 install .
+
+#EXPOSE 5000
+CMD [ "python", "./api/api.py" ]
