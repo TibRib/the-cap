@@ -26,8 +26,7 @@ export class FileUploadService {
     const headers = this.UploadHeader();
     return this.httpClient
       .post(endpoint, formData, { headers }).pipe(
-      map(() => { return true; }),
-      catch(e => this.handleError(e))
+        map(() => { return true; })
       );
   }
   handleError(e: any) {

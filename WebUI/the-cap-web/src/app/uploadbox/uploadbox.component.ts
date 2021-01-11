@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FileUploadService } from '../file-upload.service';
 
 @Component({
   selector: 'app-uploadbox',
@@ -8,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 export class UploadboxComponent implements OnInit {
   fileToUpload: File = null;
 
-  constructor() { }
+  constructor(private fileUploadService:FileUploadService ) { }
 
   ngOnInit(): void {
   }
