@@ -1,55 +1,85 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { GCS_StorageService } from '../cloud-storage-services/gcs-storage.service';
-import { FileUploader } from 'ng2-file-upload';
 import { HttpClient } from '@angular/common/http';
+import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions, UploadStatus } from 'ngx-uploader';
 
 @Component({
   selector: 'app-uploadbox',
-  template: `
-
-<div style="text-align: center">
-  <form>      
-    <div>
-      <input type="file" name="image" (change)="selectFile($event)" />
-    </div>
-    <br>
-    <div>
-      <button type="submit" (click)="onSubmit()">Upload</button>
-    </div>
-  </form>
-</div>
-
-  
-  `,
-  styles: [``]
+  templateUrl: 'uploadbox.component.html',
+  styleUrls: ['uploader.css']
 })
 
-
 export class UploadboxComponent implements OnInit {
-  
-  images;
+ url = '/uploadAPI/upload';
+ formData: FormData;
+ files: UploadFile[];
+ uploadInput: EventEmitter<UploadInput>;
+ humanizeBytes: Function;
+ dragOver: boolean;
+ options: UploaderOptions;
 
-  constructor(private httpClient : HttpClient) {  }
-
-
-  selectFile(event) {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      this.images = file;
-    }
+ constructor() {
+   //Max filesize set to 5.0 MB
+   this.options = { concurrency: 1, maxUploads: 3, maxFileSize: 5000000 };
+   this.files = [];
+   this.uploadInput = new EventEmitter<UploadInput>();
+   this.humanizeBytes = humanizeBytes;
+ }
+  ngOnInit(): void {
   }
 
-  //TODO : get back file in browser (for now it just refreshes due to the submit action)
-  onSubmit(){
-    const formData = new FormData();
-    formData.append('file', this.images);
+ onUploadOutput(output: UploadOutput): void {
+   if (output.type === 'allAddedToQueue') {
+     const event: UploadInput = {
+       type: 'uploadAll',
+       url: this.url,
+       method: 'POST',
+       data: { foo: 'bar' }
+     };
 
-    this.httpClient.post<any>("/uploadAPI/upload", formData).subscribe(
-      (res) => console.log(res),
-      (err) => console.log(err)
-    );
-  }
+     this.uploadInput.emit(event);
+   } else if (output.type === 'addedToQueue' && typeof output.file !== 'undefined') {
+     this.files.push(output.file);
+   } else if (output.type === 'uploading' && typeof output.file !== 'undefined') {
+     const index = this.files.findIndex(file => typeof output.file !== 'undefined' && file.id === output.file.id);
+     this.files[index] = output.file;
+   } else if (output.type === 'cancelled' || output.type === 'removed') {
+     this.files = this.files.filter((file: UploadFile) => file !== output.file);
+   } else if (output.type === 'dragOver') {
+     this.dragOver = true;
+   } else if (output.type === 'dragOut') {
+     this.dragOver = false;
+   } else if (output.type === 'drop') {
+     this.dragOver = false;
+   } else if (output.type === 'rejected' && typeof output.file !== 'undefined') {
+     alert("File '"+output.file.name+"' rejected ! (too large)")
+     console.log(output.file.name + ' rejected');
+   }
 
-  ngOnInit(): void {}
+   this.files = this.files.filter(file => file.progress.status !== UploadStatus.Done);
+ }
+
+ startUpload(): void {
+   const event: UploadInput = {
+     type: 'uploadAll',
+     url: this.url,
+     method: 'POST',
+     data: { foo: 'bar' }
+   };
+
+   this.uploadInput.emit(event);
+ }
+
+ cancelUpload(id: string): void {
+   this.uploadInput.emit({ type: 'cancel', id: id });
+ }
+
+ removeFile(id: string): void {
+   this.uploadInput.emit({ type: 'remove', id: id });
+ }
+
+ removeAllFiles(): void {
+   this.uploadInput.emit({ type: 'removeAll' });
+ }
 
 }

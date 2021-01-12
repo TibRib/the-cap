@@ -9,7 +9,8 @@ import { VideoPlayerComponent } from './video-player/video-player.component';
 import { UploadboxComponent } from './uploadbox/uploadbox.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
-import { FileUploadModule } from 'ng2-file-upload';
+
+import { NgxUploaderModule } from 'ngx-uploader';
 
 
 @NgModule({
@@ -25,7 +26,7 @@ import { FileUploadModule } from 'ng2-file-upload';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    FileUploadModule
+    NgxUploaderModule
   ],
   providers: [],
   bootstrap: [AppComponent]

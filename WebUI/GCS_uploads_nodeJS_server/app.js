@@ -81,6 +81,7 @@ app.post('/upload', multer.single('file'), (req, res, next) => {
     const publicUrl = format(
       `https://storage.googleapis.com/${bucket.name}/${blob.name}`
     );
+  console.log('Successfully uploaded '+publicUrl);
     res.status(200).send(publicUrl);
   });
 
