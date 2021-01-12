@@ -1,14 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { FileUploadService } from '../file-upload.service';
+import { GCS_StorageService } from '../cloud-storage-services/gcs-storage.service';
 import { FileUploader } from 'ng2-file-upload';
+import { HttpClient } from '@angular/common/http';
 
 const URL = "test";
 
 @Component({
   selector: 'app-uploadbox',
   template: `
+
+<!--
+<button type="button" class="btn btn-info" (click)="GetFileList()" >
+  GetFileList
+</button>
+-->
 <div class="row">
- 
+
  <div class="col-md-3">
 
      <h3>Select files</h3>
@@ -109,6 +116,20 @@ const URL = "test";
      </div>
  </div>
 </div>
+-->
+
+<div style="text-align: center">
+  <form>      
+    <div>
+      <input type="file" name="image" (change)="selectImage($event)" />
+    </div>
+    <br>
+    <div>
+      <button type="submit" (click)="onSubmit()">Upload</button>
+    </div>
+  </form>
+</div>
+
   
   `,
   styles: [`
@@ -128,9 +149,11 @@ export class UploadboxComponent implements OnInit {
   hasAnotherDropZoneOver:boolean;
   response:string;
   
-  constructor(private fileUploadService:FileUploadService) { 
+  images;
+
+  constructor(private httpClient : HttpClient) { 
     this.uploader = new FileUploader({
-      url: URL,
+      url: '/uploadAPI/file',
       disableMultipart: true, // 'DisableMultipart' must be 'true' for formatDataFunction to be called.
       formatDataFunctionIsAsync: true,
       formatDataFunction: async (item) => {
@@ -153,6 +176,24 @@ export class UploadboxComponent implements OnInit {
     this.uploader.response.subscribe( res => this.response = res );
   }
 
+
+  selectImage(event) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.images = file;
+    }
+  }
+
+  onSubmit(){
+    const formData = new FormData();
+    formData.append('file', this.images);
+
+    this.httpClient.post<any>("/uploadAPI/file", formData).subscribe(
+      (res) => console.log(res),
+      (err) => console.log(err)
+    );
+  }
+
   ngOnInit(): void {
   }
 
@@ -160,5 +201,10 @@ export class UploadboxComponent implements OnInit {
     this.hasBaseDropZoneOver = e;
   }
 
+  public GetFileList():void{/*
+    this.storageService.listObjects("the-cap-bucket").subscribe(r=>{
+      console.log(r);
+    }); */
+  }
 
 }
