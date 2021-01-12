@@ -1,0 +1,19 @@
+#Security - ask TibRib for the file
+The-CAP-GCP-dc4a47b550a7.json
+
+# dependencies
+/node_modules
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
