@@ -20,7 +20,7 @@ export class UploadboxComponent implements OnInit {
 
  constructor() {
    //Max filesize set to 5.0 MB
-   this.options = { concurrency: 1, maxUploads: 3, maxFileSize: 5000000 };
+   this.options = { concurrency: 1, maxUploads: 3, maxFileSize: 1000000 };
    this.files = [];
    this.uploadInput = new EventEmitter<UploadInput>();
    this.humanizeBytes = humanizeBytes;
