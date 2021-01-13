@@ -6,6 +6,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
   styleUrls: ['./video-player.component.css']
 })
 export class VideoPlayerComponent implements OnInit {
+  @Input() autoplay : boolean = false;
   @Input() videoSource : string;
   playing : boolean = false
 
@@ -24,7 +25,7 @@ export class VideoPlayerComponent implements OnInit {
   onPlayerReady(): void{
     console.log(this.player)
     this.player.volume = 0.25
-    if(this.videoSource)
+    if(this.videoSource && this.autoplay===true)
       this.player.play()
   }
 

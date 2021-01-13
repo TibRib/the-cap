@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
 import { NgxUploaderModule } from 'ngx-uploader';
+import { LiveOutputPageComponent } from './live-output-page/live-output-page.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { NgxUploaderModule } from 'ngx-uploader';
     AppComponent,
     LandingPageComponent,
     VideoPlayerComponent,
-    UploadboxComponent
+    UploadboxComponent,
+    LiveOutputPageComponent
   ],
   imports: [
     HttpClientModule,
