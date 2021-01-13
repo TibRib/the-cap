@@ -44,7 +44,7 @@ def matches_date():
     #if we have everything
     if year != None and month != None and day != None:
         rows = getAllMatchesFromStartDate(year=year, month=month, day=day, limit=limit)
-    #if we miss only year
+    #if we miss only year 
     elif year == None and month != None and day != None: 
         rows = getAllMatchesFromStartDate(month=month, day=day, limit=limit)
     #if we have only year
