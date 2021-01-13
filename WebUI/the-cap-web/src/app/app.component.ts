@@ -8,6 +8,7 @@ import { Component } from '@angular/core';
       <div class="navbar-nav">
           <a class="nav-item nav-link" routerLink="/">Home</a>
           <a class="nav-item nav-link" routerLink="/upload">Upload</a>
+          <a class="nav-item nav-link" routerLink="/form">Form</a>
       </div>
   </nav>
   <!-- contenu dans un container -->

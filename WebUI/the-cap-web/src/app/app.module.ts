@@ -10,6 +10,7 @@ import { UploadboxComponent } from './uploadbox/uploadbox.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { FileUploadModule } from 'ng2-file-upload';
+import { FormPageComponent } from './form-page/form-page.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { FileUploadModule } from 'ng2-file-upload';
     AppComponent,
     LandingPageComponent,
     VideoPlayerComponent,
-    UploadboxComponent
+    UploadboxComponent,
+    FormPageComponent
   ],
   imports: [
     HttpClientModule,
