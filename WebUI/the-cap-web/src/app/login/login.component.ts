@@ -32,6 +32,13 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  async onGoogleSignIn(){
+    await this.authService.GoogleAuth();
+    if (this.authService.isLoggedIn){
+      this.isSignedIn = true;
+    }
+  }
+
   handleLogout(){
     this.isSignedIn = false;
   }

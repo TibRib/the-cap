@@ -29,6 +29,24 @@ export class AuthService {
       });
   }
 
+  // tslint:disable-next-line:typedef
+  async GoogleAuth() {
+    return this.AuthLogin(new auth.GoogleAuthProvider());
+  }
+
+  // Auth logic to run auth providers
+  // tslint:disable-next-line:typedef
+  AuthLogin(provider) {
+    return this.firebaseAuth.signInWithPopup(provider)
+      .then((result) => {
+        this.isLoggedIn = true;
+        console.log(this.isLoggedIn);
+        console.log('You have been successfully logged in!');
+      }).catch((error) => {
+        console.log(error);
+      });
+  }
+
   logout(){
     this.firebaseAuth.signOut();
     localStorage.removeItem('user');
