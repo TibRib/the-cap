@@ -69,9 +69,12 @@ func (h *API_Handlers) request(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}
 //Get function of API_Handlers
 func (h *API_Handlers) get(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	/* Read my data if needed
 	h.Lock()
 	myRead := h.myData
@@ -95,6 +98,7 @@ func (h *API_Handlers) get(w http.ResponseWriter, r *http.Request) {
 
 //POST function of API_Handlers
 func (h *API_Handlers) post(w http.ResponseWriter, r *http.Request) {
+	
 	bodyBytes, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
@@ -124,9 +128,9 @@ func (h *API_Handlers) post(w http.ResponseWriter, r *http.Request) {
 
 	if inData.Url != "" {
 		fmt.Println("Url recognized, I'll go and try fetching this one...")
-		decodeJSON(inData.Url)
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(fmt.Sprintf("Received your URL : '%s'", inData.Url)))
+		decodeJSON(inData.Url)
 	}else{
 		fmt.Println("Received a POST but no 'url' field... ")
 		w.WriteHeader(http.StatusOK)

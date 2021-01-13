@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"sync"
+	"os/exec"
 )
 
 type BoundingBox struct{
@@ -30,7 +31,6 @@ type Data struct{ //TODO : Add headers
 }
 
 type APIData struct{
-	NbObjects int `json:"nb_objects"`
 	MediaToAnalyze string `json:"media_url"`
 }
 
@@ -65,7 +65,7 @@ type API_Handlers struct {
 
 //Creates a new API_Handler object (constructor)
 func newAPI_Handler() *API_Handlers {
-	return &API_Handlers{myData: APIData{ NbObjects : 32}}
+	return &API_Handlers{myData: APIData{}}
 }
 
 //Redirects method to GET, POST and other allowed methods
@@ -92,7 +92,7 @@ func (h *API_Handlers) get(w http.ResponseWriter, r *http.Request) {
 	apiData := h.myData
 	h.Unlock()
 	
-	data := mockupData(apiData.NbObjects)
+	data := mockupData(30)
 	data.MediaUrl = apiData.MediaToAnalyze
 
 	//Turn into JSON
@@ -142,20 +142,27 @@ func (h *API_Handlers) post(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 		return
 	}
-
-	fmt.Printf("NBObjects: %v\n", inData.NbObjects)
 	
 	h.Lock()
 	h.myData = inData //Changes the data in memory with the one received
+	if(h.myData.MediaToAnalyze != ""){
+		launchDetection(h.myData.MediaToAnalyze)
+	}
 	defer h.Unlock()
 }
 
 func main() {
 	var APIHandler = newAPI_Handler()
-	http.HandleFunc("/request", APIHandler.request)
+	http.HandleFunc("/", APIHandler.request)
 	fmt.Printf("SERVER API RUNNING ON PORT 8080\n")
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		panic(err)
 	}
+}
+
+func launchDetection(url string){
+	cmnd := exec.Command("./darknet", "detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights "+ url +" -i 0 -json_port 8070 -dont_show")
+	cmnd.Start()
+	fmt.Println("started darknet")
 }

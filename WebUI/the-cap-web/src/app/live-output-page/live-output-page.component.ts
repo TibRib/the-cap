@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { VisualInterpreterQueryService } from '../live-data-services/visual-interpreter-query.service';
 
 @Component({
   selector: 'app-live-output-page',
@@ -10,14 +11,21 @@ export class LiveOutputPageComponent implements OnInit {
 
   botMessages = [ "Hello", "Lorem ipsum", "this player is good"];
 
-  constructor() {
+  constructor(private vi_api : VisualInterpreterQueryService) {
    }
 
   ngOnInit(): void {
   }
 
   addMessage(): void{
-    this.botMessages.push("Message "+ this.botMessages.length);
+    this.vi_api.getResponse().subscribe( r => {
+      this.botMessages.push(r.text);
+      });
+    //this.botMessages.push("Message "+ this.botMessages.length);
+  }
+
+  sendStreamRequest(): void{
+    this.vi_api.postURL()
   }
 
 }

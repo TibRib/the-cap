@@ -45,9 +45,9 @@ RUN make
 RUN rm /usr/lib/x86_64-linux-gnu/libcuda.so.1
 
 # Copy the server app local sources
-COPY API_server /root/darknet/API_server
+COPY API_server /root/darknet
 # Move to the server
-WORKDIR /root/darknet/API_server
+WORKDIR /root/darknet
 # Download Go dependencies.
 RUN go mod download
 # Build the Go server app
@@ -58,6 +58,3 @@ EXPOSE 8080
 EXPOSE 8070
 # Command to run the server
 CMD ["./server"]
-
-#Go back to darknet (debugging)
-WORKDIR /root/darknet

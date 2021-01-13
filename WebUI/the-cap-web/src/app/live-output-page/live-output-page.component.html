@@ -5,7 +5,7 @@
 
     <div class="col col-4">
         <div class="card h-100" (click)="addMessage()">
-                <ul class="list-group m-0 d-block " #scrollMe [scrollTop]="scrollMe.scrollHeight">
+                <ul class="list-group m-0 d-block " >
                     <li *ngFor="let msg of botMessages" class="list-group-item ">
                         "{{ msg }}"
                     </li>
@@ -14,6 +14,8 @@
     </div>
 
 </div>
+
+<button class="btn btn-primary" (click)="sendStreamRequest()">Send VI post URL of objectObserver</button>
 
 <div class="row">
     <div class="col">
