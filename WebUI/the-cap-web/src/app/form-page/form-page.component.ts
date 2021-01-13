@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'app-form-page',
@@ -7,17 +8,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FormPageComponent implements OnInit {
 
-  displayForm = 0;
-
   options = [
     { value : '', label: ''},
     { value: '1', label: 'Tennis' },
   ];
 
-  constructor() {
+  @Output() isLogut = new EventEmitter<void>();
+  constructor(public authService: AuthService) {
   }
 
   ngOnInit(): void {
+  }
+
+  logout(){
+    this.authService.logout();
+    this.isLogut.emit();
   }
 
 }

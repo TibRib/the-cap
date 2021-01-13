@@ -11,6 +11,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { FileUploadModule } from 'ng2-file-upload';
 import { FormPageComponent } from './form-page/form-page.component';
+import { LoginComponent } from './login/login.component';
+import {AngularFireModule} from '@angular/fire';
+import {environment} from '../environments/environment.prod';
+import {AngularFireAuthModule} from '@angular/fire/auth';
+import {AngularFirestoreModule} from '@angular/fire/firestore';
+import {AuthService} from "./services/auth.service";
 
 
 @NgModule({
@@ -19,7 +25,8 @@ import { FormPageComponent } from './form-page/form-page.component';
     LandingPageComponent,
     VideoPlayerComponent,
     UploadboxComponent,
-    FormPageComponent
+    FormPageComponent,
+    LoginComponent
   ],
   imports: [
     HttpClientModule,
@@ -27,9 +34,13 @@ import { FormPageComponent } from './form-page/form-page.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    FileUploadModule
+    FileUploadModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
+    AngularFirestoreModule
+
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
