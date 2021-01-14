@@ -1,6 +1,7 @@
 import sqlite3
 import json
 
+db_path = 'sql/tennisReal.db'
 
 def JSONify(row):
     """
@@ -87,7 +88,7 @@ def getAllMatchesFromAthlete(athlete_name, limit=10000000):
     Returns:
         tuples -- all the rows returned from SQlite
     """
-    conn = sqlite3.connect('sql/tennisReal.db')
+    conn = sqlite3.connect(db_path)
     curs = conn.cursor()
     query = "SELECT * FROM matches WHERE player_id LIKE '%" + \
         str(athlete_name) + "%' LIMIT " + str(limit) + ";"
@@ -112,7 +113,7 @@ def getAllMatchesFromStartDate(year='0', month=0, day=0, limit=10000000):
     """
     date = str(year) + '-' + "{:02d}".format(month) + \
         '-' + "{:02d}".format(day)
-    conn = sqlite3.connect('sql/tennisReal.db')
+    conn = sqlite3.connect(db_path)
     curs = conn.cursor()
 
 
@@ -154,7 +155,7 @@ def getQuery(query='', limit=1000000):
     """
     docstring
     """
-    conn = sqlite3.connect('sql/tennisReal.db')
+    conn = sqlite3.connect(db_path)
     curs = conn.cursor()
 
 
