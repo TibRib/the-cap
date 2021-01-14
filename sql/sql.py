@@ -150,5 +150,25 @@ def getAllMatchesFromStartDate(year='0', month=0, day=0, limit=10000000):
 
     return rows
 
+def getQuery(query='', limit=1000000):
+    """
+    docstring
+    """
+    conn = sqlite3.connect('sql/tennisReal.db')
+    curs = conn.cursor()
+
+
+    if limit == None:
+        limit = 1000000
+    
+    query = query
+
+    curs.execute(query)
+    rows = curs.fetchall()
+
+    conn.commit()
+    conn.close()
+
+    return rows
 #rows = getAllMatchesFromAthlete(str('novac'), limit=10)
 # print(JSONify(rows[0]))

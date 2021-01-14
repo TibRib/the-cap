@@ -1,5 +1,5 @@
 import json
-from sql.sql import JSONify, getAllMatchesFromAthlete, getAllMatchesFromStartDate
+from sql.sql import JSONify, getAllMatchesFromAthlete, getAllMatchesFromStartDate, getQuery
 import flask
 import os 
 
@@ -14,6 +14,21 @@ def home():
     return '''<h1>Getting data from SQLite</h1>
 <p>A prototype API for distant reading of science fiction novels.</p>'''
 
+# DEV ONLY
+# http://localhost:5000/api/info/match/query/?query=select__*__from__matches__limit__10;
+@app.route("/api/info/match/query/",  methods=['GET'])
+def query():
+    quer = str(request.args.get("query"))
+    new_quer = quer.replace('__', ' ')
+    print(new_quer)
+    limit = request.args.get("limit")
+    json_list = []
+    rows = getQuery(query=new_quer, limit=limit)
+
+    for row in rows:
+        json_list.append(JSONify(row))
+
+    return jsonify(json_list)
 
 # http://localhost:5000/api/info/match/name/?name=novak_djokovic&limit=10
 @app.route("/api/info/match/name/",  methods=['GET'])
