@@ -9,6 +9,7 @@ import (
 	"net/http/httputil"
 	"sync"
 	"os/exec"
+	"bytes"
 )
 
 type BoundingBox struct{
@@ -146,9 +147,12 @@ func (h *API_Handlers) post(w http.ResponseWriter, r *http.Request) {
 	h.Lock()
 	h.myData = inData //Changes the data in memory with the one received
 	if(h.myData.MediaToAnalyze != ""){
+		w.WriteHeader(http.StatusOK)
 		launchDetection(h.myData.MediaToAnalyze)
 	}
 	defer h.Unlock()
+
+	return
 }
 
 func main() {
@@ -162,7 +166,23 @@ func main() {
 }
 
 func launchDetection(url string){
-	cmnd := exec.Command("./darknet", "detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights "+ url +" -i 0 -json_port 8070 -dont_show")
-	cmnd.Start()
-	fmt.Println("started darknet")
+	app := "./darknet"
+    args := [11]string{"detector","demo","cfg/coco.data","cfg/yolov4.cfg","yolov4.weights",url,"-i","0","-json_port","8070","-dont_show"}
+
+    cmd := exec.Command(app, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8],args[9],args[10])
+	buf := &bytes.Buffer{}
+	cmd.Stdout = buf
+	if err := cmd.Start(); err != nil {
+		fmt.Println("Failed to start cmd:", err)
+	}
+	fmt.Println("Darknet launched ! wait 5 seconds and access your :8070 port")
+	// And when you need to wait for the command to finish:
+	/*
+	if err := cmd.Wait(); err != nil {
+		fmt.Println("Cmd returned error:", err)
+	}
+	fmt.Println("[OUTPUT:]", buf.String())
+	*/
+	return
 }
+	
