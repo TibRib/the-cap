@@ -22,7 +22,7 @@ export class VisualInterpreterQueryService {
   }
 
   postURL(u : string) : void{
-    let to_send : VisualInterpreterRequest = { url : u}
+    let to_send : VisualInterpreterRequest = { media_url : u}
     this.http.post("/visualAPI", to_send).subscribe( r => {
       console.log("VI POST response : "+r);
     })

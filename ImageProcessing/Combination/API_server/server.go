@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"math/rand"
 	"io/ioutil"
 	"net/http"
@@ -11,6 +10,7 @@ import (
 	"time"
 	"log"
 	"sync"
+	"strconv"
 )
 
 /******** STRUCTURES *********/
@@ -115,17 +115,7 @@ func printObject(obj DetectedObject){
 		obj.Coords.CenterX,	obj.Coords.CenterY, obj.Coords.Width, obj.Coords.Height,
 	)
 }
-func decodeJSON(endpoint string, print_results bool){
-	http := &http.Client{}
-
-	r, httperr := http.Get(endpoint)
-	if httperr != nil {
-		log.Println(httperr)
-		log.Println("Connexion is not possible :(")
-		return
-    }
-	defer r.Body.Close()
-
+func decodeJSON(r *http.Response, print_results bool){
 	dec := json.NewDecoder(r.Body)
 	// read open bracket
 	t, err := dec.Token()
@@ -172,7 +162,6 @@ func launchDetection(url string){
 		"-dont_show",
 		"-width","800",
 		"-height","450",
-		"-dontdraw",
 		"-dontdraw_bbox",
 		)
 	buf := &bytes.Buffer{}
@@ -181,9 +170,43 @@ func launchDetection(url string){
 		log.Println("Failed to start cmd:", err)
 	}
 	log.Println("Darknet launched ! wait 5 seconds and access your :8070 port")
+	go launchDecoding()
 	return
 }
 
+const darknetJSONStreamUrl = "http://localhost:8070"
+
+func launchDecoding(){
+	const MAX_TRY = 15
+
+	var (
+        err      error
+        resp *http.Response
+        nbTries  int = 0
+    )
+	for nbTries < MAX_TRY{
+		resp, err = http.Get(darknetJSONStreamUrl)
+		if err != nil {
+			nbTries++
+			if(nbTries >= MAX_TRY){
+				log.Println("Err : couldnt access "+darknetJSONStreamUrl+" after "+strconv.Itoa(nbTries)+" try...")
+				return
+			}
+			time.Sleep(1 * time.Second)
+			
+			continue
+		}else{
+			break
+		}
+	}
+	if resp != nil {
+		defer resp.Body.Close()
+		log.Println("Successful access to "+darknetJSONStreamUrl+" after "+strconv.Itoa(nbTries)+" tries.")
+        decodeJSON(resp, true) 
+    }
+	
+	
+}
 
 /******** API HANDLERS **********/
 
@@ -251,7 +274,7 @@ func (h *API_Handlers) post(w http.ResponseWriter, r *http.Request) {
 	content_type := r.Header.Get("content-type")
 	if content_type != "application/json" {
 		w.WriteHeader(http.StatusUnsupportedMediaType)
-		w.Write([]byte(fmt.Sprintf("The API requires a json content-type, but got a '%s' instead", content_type)))
+		w.Write([]byte("The API requires a json content-type, but got a '"+content_type+"' instead"))
 		return
 	}
 
@@ -271,22 +294,22 @@ func (h *API_Handlers) post(w http.ResponseWriter, r *http.Request) {
 
 	if(detectionIsRunning){
 		w.WriteHeader(http.StatusTooEarly)
-		w.Write([]byte(fmt.Sprintf("Analysis ALREADY RUNNING")))
+		w.Write([]byte("Analysis ALREADY RUNNING"))
 	}else{
 		if(inData.MediaToAnalyze != ""){
 			//TODO : save to a structure
 			log.Println("Media URL received, launching Darknet!")
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(fmt.Sprintf("Received your URL : '%s'", inData.MediaToAnalyze)))
+			w.Write([]byte("Received your URL : "+inData.MediaToAnalyze))
 	
 			h.mutex.Lock()
 			h.DetectionIsRunning = true
 			h.mutex.Unlock()
 
-			launchDetection(inData.MediaToAnalyze)
+			go launchDetection(inData.MediaToAnalyze)
 		}else{
 			w.WriteHeader(http.StatusExpectationFailed)
-			w.Write([]byte(fmt.Sprintf("media_url required for analysis")))
+			w.Write([]byte("media_url required for analysis"))
 		}
 	}
 	
@@ -307,7 +330,6 @@ func main() {
 }
 
 /****** TODOS ********/
-//TEST with mockup
 // Replace mockup GET with real results
 	// Wait 5 seconds after launch
 	// Listen to json stream on localhost:8070

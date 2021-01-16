@@ -10,9 +10,5 @@
 
   "/visualAPI": {
     "target": "http://localhost:8080"
-  },
-
-  "/observerAPI": {
-    "target": "http://localhost:8090"
   }
 }

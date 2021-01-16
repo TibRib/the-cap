@@ -1,6 +1,6 @@
 <div class="row mb-4">
     <div class="col col-8">
-        <app-video-player videoSource="{{videoUrl}}" [autoplay]="false"></app-video-player>
+        <app-video-player videoSource="{{videoUrl}}" [autoplay]="true"></app-video-player>
     </div>
 
     <div class="col col-4">
@@ -12,10 +12,8 @@
                 </ul>
         </div>
     </div>
-
 </div>
-<button class="btn btn-secondary" (click)="sendOBJOPost()">Send OBJ_OBSERVER post URL of media</button>
-<br>
+
 <button class="btn btn-primary" (click)="sendVIPost()">Send VI post URL of objectObserver</button>
 
 <div class="row">

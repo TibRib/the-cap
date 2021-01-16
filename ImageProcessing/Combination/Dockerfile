@@ -55,6 +55,8 @@ RUN go build -o server .
 
 # Expose port 8080 to the host
 EXPOSE 8080
+# Expose 8070 : debug for json stream over recognized objects.
+EXPOSE 8070
 
 # Command to run the server
 CMD ["./server"]

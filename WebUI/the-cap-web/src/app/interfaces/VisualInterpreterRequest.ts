@@ -1,3 +1,3 @@
 export interface VisualInterpreterRequest{
-    url : string;
+    media_url : string;
 }
