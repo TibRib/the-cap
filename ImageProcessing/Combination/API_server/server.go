@@ -107,6 +107,19 @@ func mockupResponseData(nbFrames int) ResponseData{
 	return resp
 }
 
+/********* REAL DEDUCTION FUNCTIONS *************/
+func deductFrame(input DarknetData) FrameDeduction {
+	var str string = strconv.Itoa(input.FrameID)+" - I see "
+	for _, obj := range input.Objects{
+		str+= obj.Name+", "
+	}
+	deduct := FrameDeduction{ FrameID : input.FrameID, Text: str }
+	return deduct
+}
+
+var deducted []FrameDeduction
+const MAX_BUFFER_deducted = 50
+
 /******** DARKNET JSON STREAM PARSING FUNCTIONS *********/
 func printObject(obj DetectedObject){
 	log.Printf("\t'%s' - %v%% sure - coords:{x: %v, y: %v, width: %v, height:%v}\n",
@@ -140,6 +153,12 @@ func decodeJSON(r *http.Response, print_results bool){
 				printObject(obj)
 			}
 		}
+		if len(deducted) > MAX_BUFFER_deducted{
+			//Pop front of array -- empty for now..
+			deducted = nil
+			deducted = []FrameDeduction{}
+		}
+		deducted = append(deducted, deductFrame(m))
 	}
 	// read closing bracket
 	t, err = dec.Token()
@@ -149,6 +168,7 @@ func decodeJSON(r *http.Response, print_results bool){
 		return
 	}
 	log.Printf("%T: %v\n", t, t)
+	deducted = nil //Free the memory
 }
 
 /******* DARKNET EXECUTION FUNCTIONS *******/
@@ -177,6 +197,7 @@ func launchDetection(url string){
 const darknetJSONStreamUrl = "http://localhost:8070"
 
 func launchDecoding(){
+	deducted = []FrameDeduction{}
 	const MAX_TRY = 15
 
 	var (
@@ -202,7 +223,7 @@ func launchDecoding(){
 	if resp != nil {
 		defer resp.Body.Close()
 		log.Println("Successful access to "+darknetJSONStreamUrl+" after "+strconv.Itoa(nbTries)+" tries.")
-        decodeJSON(resp, true) 
+        decodeJSON(resp, false) //Set to 2nd parameter to true for debugging 
     }
 	
 	
@@ -245,7 +266,16 @@ func enableCors(w *http.ResponseWriter) {
 func (h *API_Handlers) get(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	//TODO : Remplacer par véritable data
-	data := mockupResponseData(25)
+	//data := mockupResponseData(25)
+	var nbFrames =749
+	var media_infos MediaInfos = MediaInfos{Url: "my_url", Duration: (nbFrames/25)}
+	data := ResponseData{ Media: media_infos, FramesProcessed: nbFrames, Deductions : deducted }
+
+	//Clear the deduction array
+	h.mutex.Lock()
+	deducted = nil
+	deducted = []FrameDeduction{}
+	h.mutex.Unlock()
 
 	//Turn data into JSON
 	jsonBytes, err := json.Marshal(data)
@@ -330,7 +360,5 @@ func main() {
 }
 
 /****** TODOS ********/
-// Replace mockup GET with real results
-	// Wait 5 seconds after launch
-	// Listen to json stream on localhost:8070
-	// Write Header with global data
+//TODO : FIFO Ring Buffer for detected[]
+	// + Better implementation of the global buffer to avoid spaguetti code
