@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ObjectObserverQueryService } from '../live-data-services/object-observer-query.service';
 import { VisualInterpreterQueryService } from '../live-data-services/visual-interpreter-query.service';
 
 @Component({
@@ -8,10 +9,11 @@ import { VisualInterpreterQueryService } from '../live-data-services/visual-inte
 })
 export class LiveOutputPageComponent implements OnInit {
   videoUrl : string = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4";
+  objo_stream_http : string = "http://172.19.240.1:7000";
 
   botMessages = [ "Hello", "Lorem ipsum", "this player is good"];
 
-  constructor(private vi_api : VisualInterpreterQueryService) {
+  constructor(private vi_api : VisualInterpreterQueryService, private objo_api : ObjectObserverQueryService) {
    }
 
   ngOnInit(): void {
@@ -24,8 +26,13 @@ export class LiveOutputPageComponent implements OnInit {
     //this.botMessages.push("Message "+ this.botMessages.length);
   }
 
-  sendStreamRequest(): void{
-    this.vi_api.postURL()
+  //Sends to the visualAPI the url of the 
+  sendVIPost(): void{
+    this.vi_api.postURL(this.objo_stream_http)
+  }
+
+  sendOBJOPost(): void{
+    this.objo_api.postURL(this.videoUrl)
   }
 
 }

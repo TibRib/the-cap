@@ -25,6 +25,8 @@ var actionsBalle = []string{"launches the ball","catches the ball","sends back t
 var actionsJeu = []string{"scores a new point", "did a mistake","is doing well", "makes a smash!"}
 var participants = []string{"The american","The two-times champion","The adversary", "Our player","The Irish"}
 
+var current_sentence = ""
+
 func mockupSentence() string{
 	part := participants[rand.Intn(len(participants)-1)]
 	act  := actionsBalle[rand.Intn(len(actionsBalle)-1)]
@@ -39,6 +41,11 @@ func mockupSentence() string{
 func mockupData() ResponseData{
 	str := mockupSentence()
 	fmt.Println("'"+str+"'")
+	return ResponseData{Text :str }
+}
+
+func realTimeData() ResponseData{
+	str := current_sentence
 	return ResponseData{Text :str }
 }
 
@@ -75,12 +82,8 @@ func enableCors(w *http.ResponseWriter) {
 //Get function of API_Handlers
 func (h *API_Handlers) get(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
-	/* Read my data if needed
-	h.Lock()
-	myRead := h.myData
-	h.Unlock()
-	*/
-	data := mockupData()
+	
+	data := realTimeData()
 
 	//Turn data into JSON
 	jsonBytes, err := json.Marshal(data)
@@ -204,8 +207,10 @@ func decodeJSON(endpoint string){
 		}
 
 		fmt.Printf("--- Frame %v: %v objects :\n", m.FrameID, len(m.Objects))
+		current_sentence = "I see : "
 		for _, obj := range m.Objects {
 			printObject(obj)
+			current_sentence += obj.Name+", "
 		}
 		//If you want to see the memory usage, use PrintMemUsage() here
 

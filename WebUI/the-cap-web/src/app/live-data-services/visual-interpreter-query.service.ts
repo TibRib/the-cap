@@ -21,8 +21,8 @@ export class VisualInterpreterQueryService {
     return obs.asObservable();
   }
 
-  postURL() : void{
-    let to_send : VisualInterpreterRequest = { url : "http://localhost:7000"}
+  postURL(u : string) : void{
+    let to_send : VisualInterpreterRequest = { url : u}
     this.http.post("/visualAPI", to_send).subscribe( r => {
       console.log("VI POST response : "+r);
     })
