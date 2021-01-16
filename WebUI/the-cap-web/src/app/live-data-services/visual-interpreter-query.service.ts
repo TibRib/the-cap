@@ -15,7 +15,7 @@ export class VisualInterpreterQueryService {
     let obs : Subject<VisualInterpreterResponse> = new Subject<VisualInterpreterResponse>();
     this.http.get<VisualInterpreterResponse>("/visualAPI").subscribe( r => {
       console.log("VI received : "+r);
-      obs.next({ text:r["text"] } );
+      obs.next(r);
     })
 
     return obs.asObservable();

@@ -21,7 +21,9 @@ export class LiveOutputPageComponent implements OnInit {
 
   addMessage(): void{
     this.vi_api.getResponse().subscribe( r => {
-      this.botMessages.push(r.text);
+        for(var i=0; i<r.frames_processed; i++){
+          this.botMessages.push(r.deductions[i].text);
+        }
       });
     //this.botMessages.push("Message "+ this.botMessages.length);
   }
