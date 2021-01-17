@@ -168,7 +168,8 @@ func decodeJSON(r *http.Response, print_results bool){
 		return
 	}
 	log.Printf("%T: %v\n", t, t)
-	deducted = nil //Free the memory
+
+	go onDetectionEnded()
 }
 
 /******* DARKNET EXECUTION FUNCTIONS *******/
@@ -227,6 +228,14 @@ func launchDecoding(){
     }
 	
 	
+}
+
+func onDetectionEnded(){
+	log.Println("Detection ended !")
+	APIHandler.mutex.Lock()
+	APIHandler.DetectionIsRunning = false
+	APIHandler.mutex.Unlock()
+	log.Println("Waiting for new calls...")
 }
 
 /******** API HANDLERS **********/
@@ -347,10 +356,11 @@ func (h *API_Handlers) post(w http.ResponseWriter, r *http.Request) {
 }
 
 /******** MAIN *********/
+var APIHandler *API_Handlers
 
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
-	var APIHandler = newAPI_Handler()
+	APIHandler = newAPI_Handler()
 	http.HandleFunc("/", APIHandler.request)
 	log.Printf("SERVER API RUNNING ON PORT 8080\n")
 	err := http.ListenAndServe(":8080", nil)
