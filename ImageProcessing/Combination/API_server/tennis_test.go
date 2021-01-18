@@ -59,8 +59,8 @@ func TestMinusSquare(t *testing.T) {
 		t.Errorf("MinusSquare error : expected 1.0, got %f",got)
 	}
 	got = MinusSquare(-5.0,5.0)
-	if got != 25.0 {
-		t.Errorf("MinusSquare error : expected 25.0, got %f",got)
+	if got != 100.0 {
+		t.Errorf("MinusSquare error : expected 100.0, got %f",got)
 	}
 }
 
