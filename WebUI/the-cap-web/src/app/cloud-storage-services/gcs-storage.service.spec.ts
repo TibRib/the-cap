@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FileUploadService } from './file-upload.service';
+import { GCS_StorageService } from './gcs-storage.service';
 
-describe('FileUploadService', () => {
-  let service: FileUploadService;
+describe('GCS_StorageService', () => {
+  let service: GCS_StorageService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(FileUploadService);
+    service = TestBed.inject(GCS_StorageService);
   });
 
   it('should be created', () => {

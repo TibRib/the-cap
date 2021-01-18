@@ -1,164 +1,85 @@
-import { Component, OnInit } from '@angular/core';
-import { FileUploadService } from '../file-upload.service';
-import { FileUploader } from 'ng2-file-upload';
-
-const URL = "test";
+import { Component, EventEmitter, OnInit } from '@angular/core';
+import { GCS_StorageService } from '../cloud-storage-services/gcs-storage.service';
+import { HttpClient } from '@angular/common/http';
+import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions, UploadStatus } from 'ngx-uploader';
 
 @Component({
   selector: 'app-uploadbox',
-  template: `
-<div class="row">
- 
- <div class="col-md-3">
-
-     <h3>Select files</h3>
-
-     <div ng2FileDrop
-          [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
-          (fileOver)="fileOverBase($event)"
-          [uploader]="uploader"
-          class="well my-drop-zone">
-         Base drop zone
-     </div>
-
-     Single
-     <input type="file" ng2FileSelect [uploader]="uploader" />
- </div>
-
- <div class="col-md-9" style="margin-bottom: 40px">
-
-     <h3>Upload queue</h3>
-     <p>Queue length: {{ uploader?.queue?.length }}</p>
-
-     <table class="table">
-         <thead>
-         <tr>
-             <th width="50%">Name</th>
-             <th>Size</th>
-             <th>Progress</th>
-             <th>Status</th>
-             <th>Actions</th>
-         </tr>
-         </thead>
-         <tbody>
-         <tr *ngFor="let item of uploader.queue">
-             <td><strong>{{ item?.file?.name }}</strong></td>
-             <td *ngIf="uploader.options.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
-             <td *ngIf="uploader.options.isHTML5">
-                 <div class="progress" style="margin-bottom: 0;">
-                     <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
-                 </div>
-             </td>
-             <td class="text-center">
-                 <span *ngIf="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
-                 <span *ngIf="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
-                 <span *ngIf="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
-             </td>
-             <td nowrap>
-                 <button type="button" class="btn btn-success btn-xs"
-                         (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
-                     <span class="glyphicon glyphicon-upload"></span> Upload
-                 </button>
-                 <button type="button" class="btn btn-warning btn-xs"
-                         (click)="item.cancel()" [disabled]="!item.isUploading">
-                     <span class="glyphicon glyphicon-ban-circle"></span> Cancel
-                 </button>
-                 <button type="button" class="btn btn-danger btn-xs"
-                         (click)="item.remove()">
-                     <span class="glyphicon glyphicon-trash"></span> Remove
-                 </button>
-             </td>
-         </tr>
-         </tbody>
-     </table>
-
-     <div>
-         <div>
-             Queue progress:
-             <div class="progress" style="">
-                 <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
-             </div>
-         </div>
-         <button type="button" class="btn btn-success btn-s"
-                 (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
-             <span class="glyphicon glyphicon-upload"></span> Upload all
-         </button>
-         <button type="button" class="btn btn-warning btn-s"
-                 (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">
-             <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
-         </button>
-         <button type="button" class="btn btn-danger btn-s"
-                 (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
-             <span class="glyphicon glyphicon-trash"></span> Remove all
-         </button>
-     </div>
-
- </div>
-
-</div>
-
-<br><br>
-
-<div class="row">
- <div class="col-md-12">
-     <div class="panel panel-default">
-         <div class="panel-heading">Response</div>
-         <div class="panel-body">
-           {{ response }}
-         </div>
-     </div>
- </div>
-</div>
-  
-  `,
-  styles: [`
-    .my-drop-zone { border: dotted 3px lightgray; }
-    .nv-file-over { border: dotted 3px red; } /* Default class applied to drop zones on over */
-    .another-file-over-class { border: dotted 3px green; }
- 
-    html, body { height: 100%; }
-  `]
+  templateUrl: 'uploadbox.component.html',
+  styleUrls: ['uploader.css']
 })
 
-
 export class UploadboxComponent implements OnInit {
+ url = '/uploadAPI/upload';
+ formData: FormData;
+ files: UploadFile[];
+ uploadInput: EventEmitter<UploadInput>;
+ humanizeBytes: Function;
+ dragOver: boolean;
+ options: UploaderOptions;
 
-  uploader:FileUploader;
-  hasBaseDropZoneOver:boolean;
-  hasAnotherDropZoneOver:boolean;
-  response:string;
-  
-  constructor(private fileUploadService:FileUploadService) { 
-    this.uploader = new FileUploader({
-      url: URL,
-      disableMultipart: true, // 'DisableMultipart' must be 'true' for formatDataFunction to be called.
-      formatDataFunctionIsAsync: true,
-      formatDataFunction: async (item) => {
-        return new Promise( (resolve, reject) => {
-          resolve({
-            name: item._file.name,
-            length: item._file.size,
-            contentType: item._file.type,
-            date: new Date()
-          });
-        });
-      }
-    });
- 
-    this.hasBaseDropZoneOver = false;
-    this.hasAnotherDropZoneOver = false;
- 
-    this.response = '';
- 
-    this.uploader.response.subscribe( res => this.response = res );
-  }
-
+ constructor() {
+   //Max filesize set to 5.0 MB
+   this.options = { concurrency: 1, maxUploads: 3, maxFileSize: 1000000 };
+   this.files = [];
+   this.uploadInput = new EventEmitter<UploadInput>();
+   this.humanizeBytes = humanizeBytes;
+ }
   ngOnInit(): void {
   }
 
-  public fileOverBase(e:any):void {
-    this.hasBaseDropZoneOver = e;
-  }
+ onUploadOutput(output: UploadOutput): void {
+   if (output.type === 'allAddedToQueue') {
+     const event: UploadInput = {
+       type: 'uploadAll',
+       url: this.url,
+       method: 'POST',
+       data: { foo: 'bar' }
+     };
 
+     this.uploadInput.emit(event);
+   } else if (output.type === 'addedToQueue' && typeof output.file !== 'undefined') {
+     this.files.push(output.file);
+   } else if (output.type === 'uploading' && typeof output.file !== 'undefined') {
+     const index = this.files.findIndex(file => typeof output.file !== 'undefined' && file.id === output.file.id);
+     this.files[index] = output.file;
+   } else if (output.type === 'cancelled' || output.type === 'removed') {
+     this.files = this.files.filter((file: UploadFile) => file !== output.file);
+   } else if (output.type === 'dragOver') {
+     this.dragOver = true;
+   } else if (output.type === 'dragOut') {
+     this.dragOver = false;
+   } else if (output.type === 'drop') {
+     this.dragOver = false;
+   } else if (output.type === 'rejected' && typeof output.file !== 'undefined') {
+     alert("File '"+output.file.name+"' rejected ! (too large)")
+     console.log(output.file.name + ' rejected');
+   }
+
+   this.files = this.files.filter(file => file.progress.status !== UploadStatus.Done);
+ }
+
+ startUpload(): void {
+   const event: UploadInput = {
+     type: 'uploadAll',
+     url: this.url,
+     method: 'POST',
+     data: { foo: 'bar' }
+   };
+
+   this.uploadInput.emit(event);
+ }
+
+ cancelUpload(id: string): void {
+   this.uploadInput.emit({ type: 'cancel', id: id });
+ }
+
+ removeFile(id: string): void {
+   this.uploadInput.emit({ type: 'remove', id: id });
+ }
+
+ removeAllFiles(): void {
+   this.uploadInput.emit({ type: 'removeAll' });
+ }
 
 }

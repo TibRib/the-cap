@@ -1,0 +1,28 @@
+<div class="row mb-4">
+    <div class="col col-8">
+        <app-video-player videoSource="{{videoUrl}}" [autoplay]="false"></app-video-player>
+    </div>
+
+    <div class="col col-4">
+        <div class="card h-100" (click)="addMessage()">
+                <ul class="list-group m-0 d-block " #scrollMe [scrollTop]="scrollMe.scrollHeight">
+                    <li *ngFor="let msg of botMessages" class="list-group-item ">
+                        "{{ msg }}"
+                    </li>
+                </ul>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="card w-100 h-100">
+            <div class="card-body">
+                <h4 class="card-title">Live Analysis</h4>
+                <hr>
+                <img src="https://www.wysiwygwebbuilder.com/images/ChartJS_large.jpg" alt="charts placeholder" class="w-100">
+            </div>
+        </div>
+    </div>
+</div>

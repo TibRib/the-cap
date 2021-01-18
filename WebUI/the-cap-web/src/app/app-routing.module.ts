@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { LiveOutputPageComponent } from './live-output-page/live-output-page.component';
 import { UploadboxComponent } from './uploadbox/uploadbox.component';
 import {FormPageComponent} from './form-page/form-page.component';
 import {LoginComponent} from './login/login.component';
@@ -20,4 +21,3 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
-

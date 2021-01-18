@@ -18,6 +18,9 @@ import {AngularFireAuthModule} from '@angular/fire/auth';
 import {AngularFirestoreModule} from '@angular/fire/firestore';
 import {AuthService} from "./services/auth.service";
 
+import { NgxUploaderModule } from 'ngx-uploader';
+import { LiveOutputPageComponent } from './live-output-page/live-output-page.component';
+
 
 @NgModule({
   declarations: [
@@ -26,7 +29,8 @@ import {AuthService} from "./services/auth.service";
     VideoPlayerComponent,
     UploadboxComponent,
     FormPageComponent,
-    LoginComponent
+    LoginComponent,
+    LiveOutputPageComponent
   ],
   imports: [
     HttpClientModule,
@@ -37,7 +41,8 @@ import {AuthService} from "./services/auth.service";
     FileUploadModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    NgxUploaderModule
 
   ],
   providers: [AuthService],

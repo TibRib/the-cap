@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-landing-page',
   template: `
     <h1>Welcome ! </h1>
+
   `,
   styles: []
 })
