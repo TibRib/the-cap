@@ -14,7 +14,6 @@ export class StatsComponent implements OnInit {
 
 
   camembertChart(): void {
-    console.log('ok');
     let doc = document.getElementById("pie-chart")
 
     let winrate = Math.floor(this.test.win_loss[0] / (this.test.win_loss[0] + this.test.win_loss[1]) * 100)
