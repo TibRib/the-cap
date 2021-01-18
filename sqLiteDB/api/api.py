@@ -25,10 +25,10 @@ def query():
     json_list = []
     rows = getQuery(query=new_quer, limit=limit)
 
-    for row in rows:
-        json_list.append(JSONify(row))
+    #for row in rows:
+        #json_list.append(JSONify(row))
 
-    return jsonify(json_list)
+    return jsonify(rows)
 
 # http://localhost:5000/api/info/match/name/?name=novak_djokovic&limit=10
 @app.route("/api/info/match/name/",  methods=['GET'])
