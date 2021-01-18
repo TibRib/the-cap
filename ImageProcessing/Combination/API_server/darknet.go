@@ -8,6 +8,7 @@ import (
 	"time"
 	"log"
 	"strconv"
+	"fmt"
 )
 
 /******** STRUCTURES *********/
@@ -33,6 +34,11 @@ type DarknetData struct {
 type FrameDeduction struct {
 	FrameID int `json:"frame_id"`
 	Text string `json:"text"`
+}
+
+func (d DetectedObject) String() string{
+	return fmt.Sprintf("ClassID: %d, Name: %s, Confidence: %f, Coords{x: %f, y: %f, w: %f, h:%f }",
+		d.ClassId, d.Name, d.Confidence, d.Coords.CenterX, d.Coords.CenterY, d.Coords.Width, d.Coords.Height)
 }
 
 /******** DARKNET JSON STREAM PARSING FUNCTIONS *********/
