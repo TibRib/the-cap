@@ -53,8 +53,14 @@ export class AuthService {
   // tslint:disable-next-line:typedef
   AuthLogin(provider) {
     return this.firebaseAuth.signInWithPopup(provider)
-      .then((result) => {
+      .then((res) => {
         this.isLoggedIn = true;
+        return this.firestore.collection('user').doc(res.user.uid).set({
+          uid: res.user.uid,
+          email: res.user.email,
+          displayName: null,
+          video_url: 'http://youtube.fr/'
+        });
       }).catch((error) => {
         console.log(error);
       });

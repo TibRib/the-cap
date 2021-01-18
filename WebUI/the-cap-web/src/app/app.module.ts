@@ -16,8 +16,7 @@ import {AngularFireModule} from '@angular/fire';
 import {environment} from '../environments/environment.prod';
 import {AngularFireAuthModule} from '@angular/fire/auth';
 import {AngularFirestoreModule} from '@angular/fire/firestore';
-import {AuthService} from "./services/auth.service";
-
+import {AuthService} from './services/auth.service';
 import { NgxUploaderModule } from 'ngx-uploader';
 import { LiveOutputPageComponent } from './live-output-page/live-output-page.component';
 
