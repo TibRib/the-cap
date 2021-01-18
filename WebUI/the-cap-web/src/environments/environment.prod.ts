@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   firebase: {
-    apiKey: 'AIzaSyAxxpEZN2J2eOW1vDDmheotNnMRbv7yibs',
+    apiKey: 'AIzaSyCt3EfAaIAyoCFfLfmVtgSLKw46Yqm5c3k',
     authDomain: 'the-cap-gcp.firebaseapp.com',
     projectId: 'the-cap-gcp',
     storageBucket: 'the-cap-gcp.appspot.com',

@@ -1,5 +1,6 @@
 import {Component, OnInit, Output, EventEmitter} from '@angular/core';
-import {AuthService} from "../services/auth.service";
+import {AuthService} from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-page',
@@ -14,7 +15,7 @@ export class FormPageComponent implements OnInit {
   ];
 
   @Output() isLogut = new EventEmitter<void>();
-  constructor(public authService: AuthService) {
+  constructor(public authService: AuthService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -23,6 +24,7 @@ export class FormPageComponent implements OnInit {
   logout(){
     this.authService.logout();
     this.isLogut.emit();
+    this.router.navigate(['login']);
   }
 
 }

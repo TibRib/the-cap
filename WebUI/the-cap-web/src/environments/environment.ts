@@ -13,7 +13,7 @@ export const environment = {
     messagingSenderId: ""
   },
   firebase: {
-    apiKey: 'AIzaSyCcZUS5H4_3iNcTFCPNlD1OQTUFdW2X7zQ',
+    apiKey: 'AIzaSyCt3EfAaIAyoCFfLfmVtgSLKw46Yqm5c3k',
     authDomain: 'the-cap-gcp.firebaseapp.com',
     projectId: 'the-cap-gcp',
     storageBucket: 'the-cap-gcp.appspot.com',
