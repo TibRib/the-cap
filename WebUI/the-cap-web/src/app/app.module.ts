@@ -12,6 +12,7 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
 import { NgxUploaderModule } from 'ngx-uploader';
 import { LiveOutputPageComponent } from './live-output-page/live-output-page.component';
+import { StatsComponent } from './stats/stats.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { LiveOutputPageComponent } from './live-output-page/live-output-page.com
     LandingPageComponent,
     VideoPlayerComponent,
     UploadboxComponent,
-    LiveOutputPageComponent
+    LiveOutputPageComponent,
+    StatsComponent
   ],
   imports: [
     HttpClientModule,
