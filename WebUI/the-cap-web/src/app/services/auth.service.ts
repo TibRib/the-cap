@@ -58,7 +58,7 @@ export class AuthService {
         return this.firestore.collection('user').doc(res.user.uid).set({
           uid: res.user.uid,
           email: res.user.email,
-          displayName: null,
+          displayName: res.user.displayName,
           video_url: 'http://youtube.fr/'
         });
       }).catch((error) => {

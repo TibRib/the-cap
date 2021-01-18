@@ -65,7 +65,7 @@
         </div>
       </div>
     </div>
-    <button (click)="logout()">Logout</button>
+    <button *ngIf="authService.isLoggedIn == true" (click)="logout()">Logout</button>
   </section>
   <section *ngIf="authService.isLoggedIn == false">
     <app-login></app-login>
