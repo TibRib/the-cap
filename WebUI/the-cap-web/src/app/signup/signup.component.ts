@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {User} from '../services/user.model';
 import {AuthService} from '../services/auth.service';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-signup',
@@ -11,13 +12,9 @@ export class SignupComponent implements OnInit {
   isSignedIn = false;
   users: User[];
 
-  constructor(public authService: AuthService) { }
+  constructor(public authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
-    this.authService.getUsers().subscribe(users => {
-      this.users = users;
-      console.log(this.users);
-    });
     if (localStorage.getItem('user') !== null) {
       this.isSignedIn = true;
     } else {
@@ -26,17 +23,16 @@ export class SignupComponent implements OnInit {
   }
 
   async onSignUp(email: string, password: string, displayName: string){
-    await this.authService.signup(email, password, displayName);
-    if (this.authService.isLoggedIn){
-      this.isSignedIn = true;
-    }
-  }
-
-  async onSignIn(email: string, password: string){
-    await this.authService.signin(email, password);
-    if (this.authService.isLoggedIn){
-      this.isSignedIn = true;
-    }
+    await this.authService.signup(email, password, displayName)
+      .then((result) => {
+        if (this.authService.isLoggedIn){
+          this.isSignedIn = true;
+          this.router.navigate(['form']);
+        }
+      })
+      .catch((error) => {
+        window.alert(error.message);
+      });
   }
 
   async onGoogleSignIn(){

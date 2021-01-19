@@ -11,24 +11,15 @@ import {Observable} from 'rxjs';
 export class AuthService {
   isLoggedIn = false;
 
-  userCollection: AngularFirestoreCollection<User>;
-  users: Observable<any[]>;
+  constructor(public firebaseAuth: AngularFireAuth, private firestore: AngularFirestore, public afs: AngularFirestore) {}
 
-  uid = 'tTx3L9RQUjXz00DZtr7rbYH0fl32';
-
-  constructor(public firebaseAuth: AngularFireAuth, private firestore: AngularFirestore, public afs: AngularFirestore) {
-    this.users = this.afs.collection('user', ref => ref.where('uid', '==', this.uid)).valueChanges();
-  }
-
-  getUsers(){
-    return this.users;
-  }
   async signin(email: string, password: string){
     await this.firebaseAuth.signInWithEmailAndPassword(email, password)
       .then(res => {
         this.isLoggedIn = true;
         localStorage.setItem('user', JSON.stringify(res.user));
-      });
+      })
+      .catch(error => window.alert('Unknown user'));
   }
   async signup(email: string, password: string, username: string){
     await this.firebaseAuth.createUserWithEmailAndPassword(email, password)
@@ -44,13 +35,10 @@ export class AuthService {
       });
   }
 
-  // tslint:disable-next-line:typedef
   async GoogleAuth() {
     return this.AuthLogin(new auth.GoogleAuthProvider());
   }
 
-  // Auth logic to run auth providers
-  // tslint:disable-next-line:typedef
   AuthLogin(provider) {
     return this.firebaseAuth.signInWithPopup(provider)
       .then((res) => {

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthService} from "../services/auth.service";
-import {User} from "../services/user.model";
+import {AuthService} from '../services/auth.service';
+import {User} from '../services/user.model';
+import {Router} from '@angular/router';
+import {AngularFireAuth} from "@angular/fire/auth";
 
 @Component({
   selector: 'app-login',
@@ -9,15 +11,12 @@ import {User} from "../services/user.model";
 })
 export class LoginComponent implements OnInit {
   isSignedIn = false;
-  users: User[];
+  userLoggedIn: User;
 
-  constructor(public authService: AuthService) { }
+  constructor(public authService: AuthService, private router: Router) {
+  }
 
   ngOnInit(): void {
-    this.authService.getUsers().subscribe(users => {
-      this.users = users;
-      console.log(this.users);
-    });
     if (localStorage.getItem('user') !== null) {
       this.isSignedIn = true;
     } else {
@@ -25,18 +24,17 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  async onSignUp(email: string, password: string, displayName: string){
-    await this.authService.signup(email, password, displayName);
-    if (this.authService.isLoggedIn){
-      this.isSignedIn = true;
-    }
-  }
-
   async onSignIn(email: string, password: string){
-    await this.authService.signin(email, password);
-    if (this.authService.isLoggedIn){
-      this.isSignedIn = true;
-    }
+    await this.authService.signin(email, password)
+    .then((result) => {
+      if (this.authService.isLoggedIn){
+        this.isSignedIn = true;
+        this.authService.firebaseAuth.user.subscribe((user => {
+          this.userLoggedIn = {displayName: user.displayName, email: user.email, uid: user.uid};
+        }));
+        this.router.navigate(['/form']);
+      }
+    });
   }
 
   async onGoogleSignIn(){

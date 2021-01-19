@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./form-page.component.css']
 })
 export class FormPageComponent implements OnInit {
-
+  user: firebase.User;
   options = [
     { value : '', label: ''},
     { value: '1', label: 'Tennis' },
@@ -16,9 +16,16 @@ export class FormPageComponent implements OnInit {
 
   @Output() isLogut = new EventEmitter<void>();
   constructor(public authService: AuthService, private router: Router) {
+    authService.firebaseAuth.user.subscribe((user) => {
+      this.user = user;
+      console.log(this.user.uid);
+    });
   }
 
   ngOnInit(): void {
+    if (!this.authService.isLoggedIn){
+      this.router.navigate(['/login']);
+    }
   }
 
   logout(){
