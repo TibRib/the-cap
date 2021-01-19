@@ -1,0 +1,67 @@
+<meta charset="UTF-8">
+
+<header>
+    <script type="text/javascript" src="./d3/d3.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+</header>
+
+<body>
+    <canvas id="bar-chart" height="120">
+    </canvas>
+    <canvas id="pie-chart" height="120">
+    </canvas>
+
+    <script>
+        //this is really cool
+        //ill analyze data with python, send string formatted to js array in order to display
+
+        var win = ['win', 'loss']
+        var win_values = [87, 13]
+
+        var fields = ['clay', 'grass', 'carpet']
+        var fields_nb_matches = [555, 890, 12]
+
+        // Bar chart
+        new Chart(document.getElementById("pie-chart"), {
+            type: 'pie',
+            data: {
+                labels: win,
+                datasets: [{
+                    label: "sugar % ",
+                    backgroundColor: ["#66BB6A", "#EF5350"],
+                    data: win_values
+                }]
+            },
+            options: {
+                legend: {
+                    display: true
+                },
+                title: {
+                    display: true,
+                    text: 'Predicted world population (millions) in 2050'
+                }
+            }
+        });
+
+        new Chart(document.getElementById("bar-chart"), {
+            type: 'bar',
+            data: {
+                labels: fields,
+                datasets: [{
+                    label: "# match ",
+                    backgroundColor: ["#be5f2d", "#4dbd53", "#a984e8"],
+                    data: fields_nb_matches
+                }]
+            },
+            options: {
+                legend: {
+                    display: true
+                },
+                title: {
+                    display: true,
+                    text: 'Numbers of matches played according to field type'
+                }
+            }
+        });
+    </script>
+</body>

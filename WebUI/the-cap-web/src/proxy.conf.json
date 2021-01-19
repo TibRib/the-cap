@@ -6,5 +6,9 @@
       "^/uploadAPI": ""
     },
     "changeOrigin": true
+  },
+
+  "/visualAPI": {
+    "target": "http://localhost:8080"
   }
 }

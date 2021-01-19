@@ -29,6 +29,14 @@ export class VideoPlayerComponent implements OnInit {
       this.player.play()
   }
 
+  play():void{
+    this.player.play()
+  }
+
+  pause():void{
+    this.player.pause()
+  }
+
   onPause(): void{
     console.log("paused")
     this.playing = false;
