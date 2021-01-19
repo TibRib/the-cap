@@ -15,12 +15,7 @@ export class FormPageComponent implements OnInit {
   ];
 
   @Output() isLogut = new EventEmitter<void>();
-  constructor(public authService: AuthService, private router: Router) {
-    authService.firebaseAuth.user.subscribe((user) => {
-      this.user = user;
-      authService.updateVideoURL('http://test.fr', user.uid);
-    });
-  }
+  constructor(public authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     if (!this.authService.isLoggedIn){

@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit } from '@angular/core';
 import { GCS_StorageService } from '../cloud-storage-services/gcs-storage.service';
 import { HttpClient } from '@angular/common/http';
 import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions, UploadStatus } from 'ngx-uploader';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-uploadbox',
@@ -18,7 +19,7 @@ export class UploadboxComponent implements OnInit {
  dragOver: boolean;
  options: UploaderOptions;
 
- constructor() {
+ constructor(public authService: AuthService) {
    //Max filesize set to 5.0 MB
    this.options = { concurrency: 1, maxUploads: 3, maxFileSize: 1000000 };
    this.files = [];
@@ -54,6 +55,21 @@ export class UploadboxComponent implements OnInit {
    } else if (output.type === 'rejected' && typeof output.file !== 'undefined') {
      alert("File '"+output.file.name+"' rejected ! (too large)")
      console.log(output.file.name + ' rejected');
+   } else if(output.type === "done"){
+     console.log(output)
+     if(output.file){
+      if(output.file.responseStatus === 200){
+        alert("Fichier transmis avec succès : "+output.file.response)
+        this.authService.firebaseAuth.user.subscribe((user) => {
+          this.authService.updateVideoURL(output.file.response, user.uid);
+        });
+      }else{
+        alert("Echec : Status : "+output.file.responseStatus+" - "+output.file.response)
+        if(output.file.responseStatus === 504){
+          alert("This error occurs if you haven't started the GCS upload NodeJS server; Make sure to start it !")
+        }
+      }
+    }
    }
 
    this.files = this.files.filter(file => file.progress.status !== UploadStatus.Done);
