@@ -1,7 +1,8 @@
 import { typeWithParameters } from '@angular/compiler/src/render3/util';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import * as Chart from 'chart.js';
 import { GrabSQLITEService } from '../grab-SQLITE/grab-sqlite.service';
+import { PlayerStats } from '../interfaces/StatsComparisons';
 
 @Component({
   selector: 'app-stats',
@@ -10,23 +11,42 @@ import { GrabSQLITEService } from '../grab-SQLITE/grab-sqlite.service';
 })
 export class StatsComponent implements OnInit {
 
-  constructor(public test:GrabSQLITEService) { }
+  constructor(public test:GrabSQLITEService, private sqServ: GrabSQLITEService) {}
 
+  pieDoc: HTMLCanvasElement
+  timeDoc: HTMLCanvasElement
+  FieldDoc: HTMLCanvasElement
+
+  @Input() player: PlayerStats
+
+  @ViewChild('pie_chart')
+  set pieChart(el: ElementRef){
+    this.pieDoc = el.nativeElement
+    this.camembertChart()
+  }
+  @ViewChild('time_chart')
+  set timeChart(el: ElementRef){
+    this.timeDoc = el.nativeElement
+    this.matchDurationChart()
+  }
+  @ViewChild('field_chart')
+  set fieldChart(el: ElementRef){
+    this.FieldDoc = el.nativeElement
+    this.fieldVictoryChart()
+  }
 
   camembertChart(): void {
-    let doc = document.getElementById("pie-chart")
-
-    let winrate = Math.floor(this.test.win_loss[0] / (this.test.win_loss[0] + this.test.win_loss[1]) * 100)
-    new Chart(doc, {
+    let winrate = Math.floor(this.player.win_loss_data[0] / (this.player.win_loss_data[0] + this.player.win_loss_data[1]) * 100)
+    new Chart(this.pieDoc, {
         type: 'pie',
         data: {
-            labels: this.test.win_loss_labels,
+            labels: this.player.win_loss_label,
             datasets: [{
                 label: "W/L ratio % ",
                 borderWidth: 3,
                 backgroundColor: ["#66BB6A", "#EF5350"],
                 borderColor: ["#449c49", "#ec3532"],
-                data: this.test.win_loss
+                data: this.player.win_loss_data
             }]
         },
         options: {
@@ -35,27 +55,23 @@ export class StatsComponent implements OnInit {
             },
             title: {
                 display: false,
-                text: [this.test.athlete_name,'Win rate [ ' + winrate + ' %] ']
+                text: [this.player.athlete_name,'Win rate [ ' + winrate + ' %] ']
             }
         }
     });
 }
 
 matchDurationChart(): void {
-  console.log('ok');
-  let doc = document.getElementById("time-chart")
-
-  let winrate = Math.floor(this.test.win_loss[0] / (this.test.win_loss[0] + this.test.win_loss[1]) * 100)
-  new Chart(doc, {
+  new Chart(this.timeDoc, {
       type: 'line',
       data: {
-          labels: this.test.matches_duration_last_10_labels,
+          labels: this.player.matches_duration_label,
           datasets: [{
               label: "duration (minutes) ",
               borderWidth: 3,
               borderColor: ["#0098c7"],
               backgroundColor: ["#aeecfe9e"],
-              data: this.test.matches_duration_last_10
+              data: this.player.matches_duration_data
           }]
       },
       options: {
@@ -64,35 +80,32 @@ matchDurationChart(): void {
           },
           title: {
               display: false,
-              text: [this.test.athlete_name,'Win rate [ ' + winrate + ' %] ']
+              text: "Duration"
           }
       }
   });
 }
 
 fieldVictoryChart(): void {
-  console.log('ok');
-  let doc = document.getElementById("field-chart")
-
-  let winrate = Math.floor(this.test.win_loss[0] / (this.test.win_loss[0] + this.test.win_loss[1]) * 100)
-  new Chart(doc, {
+  let winrate = Math.floor(this.player.win_loss_data[0] / (this.player.win_loss_data[0] + this.player.win_loss_data[1]) * 100)
+  new Chart(this.FieldDoc, {
       type: 'bar',
       data: {
-          labels: this.test.fields_label,
+          labels: this.player.field_label,
           datasets: [
             {
               label: "Match won ",
               borderWidth: 3,
               backgroundColor: ["#ffffff33", "#ffffff33", "#ffffff33", "#ffffff33"],
               borderColor: ["#843c0180", "#1fa33980", "#7e01f480", "#6ad63880"],
-              data: this.test.field_data_win
+              data: this.player.field_data_win
           },
           {
             label: "Match played ",
             borderWidth: 3,
             backgroundColor: ["#a34900", "#2b72ca", "#ff6183", "#a6f084"],
             borderColor: ["#843c01", "#1fa339", "#7e01f4", "#6ad638"],
-            data: this.test.fields_data_total
+            data: this.player.field_data_total
         }]
       },
       options: {
@@ -101,7 +114,7 @@ fieldVictoryChart(): void {
           },
           title: {
               display: false,
-              text: [this.test.athlete_name,'Win rate [ ' + winrate + ' %] ']
+              text: [this.player.athlete_name,'Win rate [ ' + winrate + ' %] ']
           },
           scales: {
             xAxes: [{ stacked: true }],
@@ -117,8 +130,5 @@ fieldVictoryChart(): void {
 }
 
   ngOnInit(): void {
-    this.camembertChart()
-    this.matchDurationChart()
-    this.fieldVictoryChart()
   }
 }

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { ComparisonComponent } from './comparison/comparison.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LiveOutputPageComponent } from './live-output-page/live-output-page.component';
 import { StatsComponent } from './stats/stats.component';
@@ -9,7 +10,7 @@ const routes: Routes = [
   { path : '', component: LandingPageComponent },
   { path : 'upload', component: UploadboxComponent },
   { path : 'live', component: LiveOutputPageComponent },
-  { path : 'stats', component: StatsComponent },
+  { path : 'comparison', component: ComparisonComponent },
 
 
 
