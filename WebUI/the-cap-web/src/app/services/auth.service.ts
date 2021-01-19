@@ -54,6 +54,9 @@ export class AuthService {
       });
   }
 
+  updateVideoURL(url: string, uid: string){
+    return this.firestore.collection('user').doc(uid).set({video_url: url}, {merge: true});
+  }
   logout(){
     this.firebaseAuth.signOut();
     localStorage.removeItem('user');

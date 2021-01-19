@@ -18,7 +18,7 @@ export class FormPageComponent implements OnInit {
   constructor(public authService: AuthService, private router: Router) {
     authService.firebaseAuth.user.subscribe((user) => {
       this.user = user;
-      console.log(this.user.uid);
+      authService.updateVideoURL('http://test.fr', user.uid);
     });
   }
 
@@ -31,7 +31,6 @@ export class FormPageComponent implements OnInit {
   logout(){
     this.authService.logout();
     this.isLogut.emit();
-    this.router.navigate(['login']);
   }
 
 }
