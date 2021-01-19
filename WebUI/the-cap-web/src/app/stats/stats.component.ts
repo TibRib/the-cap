@@ -81,7 +81,15 @@ matchDurationChart(): void {
           title: {
               display: false,
               text: "Duration"
-          }
+          },
+          scales: {
+            yAxes: [{
+                ticks: {
+                    suggestedMin: 0,
+                    suggestedMax: 600
+                }
+            }]
+        }
       }
   });
 }
@@ -120,7 +128,8 @@ fieldVictoryChart(): void {
             xAxes: [{ stacked: true }],
             yAxes: [{
                     ticks: {
-                        beginAtZero:false
+                        beginAtZero:false,
+                        suggestedMin: 0
                     },
                     stacked: false
             }]
