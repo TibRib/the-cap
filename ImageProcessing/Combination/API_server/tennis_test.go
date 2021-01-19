@@ -22,8 +22,26 @@ func TestFindPersons(t* testing.T){
 	}
 }
 
-func TestFindPlayers(t *testing.T){
+func TestFindRackets(t* testing.T){
 	objs := []DetectedObject{
+		DetectedObject{ClassId:0, Name:"tennis racket", Confidence:1.0, Coords:BBox{CenterX:0.456400, CenterY:0.846349, Width:0.077099, Height:0.253434}},
+		DetectedObject{ClassId:0, Name:"chair", Confidence:1.0, Coords:BBox{CenterX:0.191585, CenterY:0.478454, Width:0.039324, Height:0.086070}},
+		DetectedObject{ClassId:0, Name:"sports ball", Confidence:1.0, Coords:BBox{CenterX:0.775891, CenterY:0.423228, Width:0.036892, Height:0.086447}},
+	}
+	expected := []DetectedObject{ 
+		DetectedObject{ClassId:0, Name:"tennis racket", Confidence:1.0, Coords:BBox{CenterX:0.456400, CenterY:0.846349, Width:0.077099, Height:0.253434}},
+	}
+	got := FindRackets(objs)
+	if !ObjArrayEquals(got, expected){
+		t.Error("Expected [1]DetectedObjects{ ... Name:'tennis racket' }, got something else")
+		for _, v := range got {
+			t.Error(v)
+		}
+	}
+}
+
+func TestFindPlayers(t *testing.T){
+	objs := []DetectedObject{ //Standard approach : no rackets
 		DetectedObject{ClassId:0, Name:"person", Confidence:1.0, Coords:BBox{CenterX:0.456400, CenterY:0.846349, Width:0.077099, Height:0.253434}},
 		DetectedObject{ClassId:0, Name:"person", Confidence:1.0, Coords:BBox{CenterX:0.191585, CenterY:0.478454, Width:0.039324, Height:0.086070}},
 		DetectedObject{ClassId:0, Name:"person", Confidence:1.0, Coords:BBox{CenterX:0.775891, CenterY:0.423228, Width:0.036892, Height:0.086447}},
@@ -134,6 +152,7 @@ func ObjArrayEquals(a []DetectedObject, b []DetectedObject) bool {
     return true
 }
 
+
 func TestFindTopObjects(t *testing.T) {
 	input := []DetectedObject{
 		DetectedObject{ClassId:0, Name:"", Confidence:1.0, Coords:BBox{CenterX:0.0, CenterY:0.42, Width:0.1, Height:0.1}},
@@ -185,4 +204,43 @@ func TestVecDifference(t* testing.T){
 	if (got != Vector2{0.0, 6.0}) {
 		t.Errorf("Failure. Got (%f, %f), Expected (%f, %f)",got.x,got.y,0.0,6.0)
 	}
+}
+
+func TestIsTouching(t *testing.T) {
+	var a BBox
+	var b BBox
+	var got bool
+
+	//Test 1: Inside
+	a = BBox{ 0.0, 0.0, 2.0, 2.0}
+	b = BBox{ 1.0, 1.0, 0.5, 0.5}
+	got = IsTouching(a,b)
+	if got != true{
+		t.Error("Error : a supposed to touch b by being inside")
+	}
+
+	//Test 2: Outside
+	a = BBox{ 0.0, 0.0, 1.0, 1.0}
+	b = BBox{ 10.0, 0.0, 1.0, 1.0}
+	got = IsTouching(a,b)
+	if got != false{
+		t.Error("Error : a and b are not supposed to touch (outside)")
+	}
+
+	//Test 3: Intersects
+	a = BBox{ 0.0, 0.0, 1.0, 1.0}
+	b = BBox{ 0.5, 0.5, 1.0, 1.0}
+	got = IsTouching(a,b)
+	if got != true{
+		t.Error("Error : a and b supposed to touch (intersects)")
+	}
+
+	//Test 4: Same
+	a = BBox{ 0.0, 0.0, 1.0, 1.0}
+	b = BBox{ 0.0, 0.0, 1.0, 1.0}
+	got = IsTouching(a,b)
+	if got != true{
+		t.Error("Error : a and b supposed to touch (same)")
+	}
+	
 }

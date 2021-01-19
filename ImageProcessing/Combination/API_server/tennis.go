@@ -81,6 +81,19 @@ func FindPersons(objs []DetectedObject) []DetectedObject{
 	return results
 }
 
+func FindRackets(objs []DetectedObject) []DetectedObject{
+	if(len(objs)==0){
+		return nil
+	}
+	results := []DetectedObject{}
+	for i := 0; i < len(objs); i++ {
+		if objs[i].Name == "tennis racket"{
+			results = append(results, objs[i])
+		}
+	}
+	return results
+}
+
 func ObjToPlayer(obj DetectedObject) Player{
 	return Player{Name:"", Points:0, Pos:Position{x:float64(obj.Coords.CenterX), y:float64(obj.Coords.CenterY)}}
 }
@@ -89,13 +102,41 @@ func FindPlayers(objs []DetectedObject) *[2]Player{
 	if(len(objs)==0){
 		return nil
 	}
-	var players [2]Player
+
 	persons := FindPersons(objs)
+	var players [2]Player
 	if(len(persons)==0){
 		return nil
 	}
+	tennisRackets := FindRackets(objs)
+	//In this block, we try to check if two players are holding a racket
+	if len(tennisRackets) >= 2 && len(persons)>=2 {
+		var pR []DetectedObject = []DetectedObject{}
+		for i := 0; i < 2; i++ {
+			//Check if one of the players touches the racket
+			for i, v := range persons {
+				if IsTouching(tennisRackets[i].Coords, v.Coords){
+					//We found a player that touches the [i] racket
+					pR = append(pR, v)
+					break
+				}
+			}
+		}
+		//Did we find 2 players holding a racket ?
+		if len(pR) == 2{
+			if pR[0].Coords.CenterY > pR[1].Coords.CenterY{
+				players[BOTTOM]= ObjToPlayer(pR[0])
+				players[TOP]= ObjToPlayer(pR[1])
+				return &players
+			}else{
+				players[TOP]= ObjToPlayer(pR[0])
+				players[BOTTOM]= ObjToPlayer(pR[1])
+				return &players
+			}
+		}
+	} //Ends here means failure, classic detection below:
 	top := FindTopObjects(persons)
-	if(len(top)>0){
+	if(len(top)>0){ //Found some players in the top
 		players[TOP] = ObjToPlayer(NearestObjToNet(top))
 	}else{
 		if(prevPlayerTop != nil){
@@ -105,7 +146,7 @@ func FindPlayers(objs []DetectedObject) *[2]Player{
 		}
 	}
 	btm := FindBottomObjects(persons)
-	if(len(btm)>0){
+	if(len(btm)>0){ //Found some players in the bottom
 		players[BOTTOM] = ObjToPlayer(NearestObjToNet(btm))
 	}else{
 		if(prevPlayerTop != nil){
@@ -179,4 +220,30 @@ func CalculateSpeed(delta float64, distance float64) float64{
 
 func VecDifference(a Position, b Position) Vector2{
 	return Vector2{a.x-b.x, a.y-b.y}
+}
+
+func WithinFloat64(v float64, min float64, max float64) bool{
+	return (v >= min && v <= max )
+}
+func WithinFloat32(v float32, min float32, max float32) bool{
+	return (v >= min && v <= max )
+}
+
+func IsTouching(a BBox, b BBox) bool{
+	aX := float64(a.CenterX)
+	aY := float64(a.CenterY)
+	aWidth := float64(a.Width)
+	aHeight:= float64(a.Height)
+
+	bX := float64(b.CenterX)
+	bY := float64(b.CenterY)
+	bWidth := float64(b.Width)
+	bHeight:= float64(b.Height)
+
+	if (math.Abs((aX + aWidth/2) - (bX + bWidth/2)) * 2 < (aWidth + bWidth)){
+		if (math.Abs((aY + aHeight/2) - (bY + bHeight/2)) * 2 < (aHeight + bHeight)) {
+			return true
+		}
+	}
+	return false
 }
