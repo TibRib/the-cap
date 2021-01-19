@@ -13,6 +13,7 @@ const routes: Routes = [
   { path : 'form', component: FormPageComponent },
   { path : 'login', component: LoginComponent },
   { path : 'signup', component: SignupComponent },
+  { path : 'live', component: LiveOutputPageComponent},
 
   // Redirection home si non trouvé
   { path : '**', redirectTo: '' }

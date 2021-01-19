@@ -10,6 +10,8 @@ import { Component } from '@angular/core';
           <a class="nav-item nav-link" routerLink="/upload">Upload</a>
           <a class="nav-item nav-link" routerLink="/form">Form</a>
           <a class="nav-item nav-link" routerLink="/login">Login</a>
+          <a class="nav-item nav-link" routerLink="/live">Live</a>
+
       </div>
   </nav>
   <!-- contenu dans un container -->

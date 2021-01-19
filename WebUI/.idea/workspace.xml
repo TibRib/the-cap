@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="93c600a4-a7a9-4aa0-bb6c-0a1d2217d4fb" name="Default Changelist" comment="" />
+    <list default="true" id="93c600a4-a7a9-4aa0-bb6c-0a1d2217d4fb" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/the-cap-web/src/app/app-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/the-cap-web/src/app/app-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/the-cap-web/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/the-cap-web/src/app/app.component.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
