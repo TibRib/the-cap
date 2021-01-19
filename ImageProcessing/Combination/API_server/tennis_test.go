@@ -40,7 +40,8 @@ func TestFindPlayers(t *testing.T){
 		Player{Name:"", Points:0, Pos:Position{ x:0.614659, y:0.163872} },
 		Player{Name:"", Points:0, Pos:Position{ x:0.456400, y:0.846349} },
 	}
-	got := FindPlayers(objs)
+	gotPtr := FindPlayers(objs)
+	got := *gotPtr
 	if len(got) != 2 {
 		t.Errorf("%d players in findPlayers(); Want 2",len(got))
 	}
@@ -169,5 +170,19 @@ func TestFindBottomObjects(t *testing.T) {
 		for _, v := range result {
 			t.Error(v)
 		}
+	}
+}
+
+func TestCalculateSpeed(t *testing.T) {
+	got := CalculateSpeed(1/25.0, 0.04)
+	if got != 1.0 {
+		t.Errorf("Failure. Got %f, Expected %f",got,1.0)
+	}
+}
+
+func TestVecDifference(t* testing.T){
+	got := VecDifference(Position{3.0,3.0}, Position{3.0,-3.0})
+	if (got != Vector2{0.0, 6.0}) {
+		t.Errorf("Failure. Got (%f, %f), Expected (%f, %f)",got.x,got.y,0.0,6.0)
 	}
 }
