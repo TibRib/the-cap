@@ -5,7 +5,7 @@ import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions, 
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
-const NEXT_VIEW = '/live'
+const NEXT_VIEW = '/comparison'
 
 @Component({
   selector: 'app-uploadbox',
@@ -61,13 +61,14 @@ export class UploadboxComponent implements OnInit {
      console.log(output)
      if(output.file){
       if(output.file.responseStatus === 200){
-        alert("Fichier transmis avec succès : "+output.file.response)
+        alert("Successfully transmitted file : "+output.file.response)
         this.authService.firebaseAuth.user.subscribe((user) => {
           this.authService.updateVideoURL(output.file.response, user.uid);
         });
+        this.nextView()
       }else{
         alert("Echec : Status : "+output.file.responseStatus+" - "+output.file.response)
-        if(output.file.responseStatus === 504){
+        if(output.file.responseStatus === 504 || output.file.responseStatus === 0 ){
           alert("This error occurs if you haven't started the GCS upload NodeJS server; Make sure to start it !")
         }
       }
