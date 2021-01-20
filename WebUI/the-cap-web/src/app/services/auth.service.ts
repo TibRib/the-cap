@@ -3,7 +3,7 @@ import {AngularFireAuth} from '@angular/fire/auth';
 import {auth} from 'firebase';
 import { User } from './user.model';
 import {AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument} from '@angular/fire/firestore';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -57,6 +57,24 @@ export class AuthService {
   updateVideoURL(url: string, uid: string){
     return this.firestore.collection('user').doc(uid).set({video_url: url}, {merge: true});
   }
+
+  retrieveVideoURL(uid: string) : Observable<string>{
+    let str : Subject<string> = new Subject<string>();
+    this.firestore.collection('user').doc(uid).get().subscribe(r =>{
+      interface VUser {
+        uid: string;
+        email: string;
+        displayName: string;
+        video_url: string
+      }
+      const data = <VUser>r.data()
+      console.log(data.video_url)
+      str.next(data.video_url)
+    });
+    
+   return str.asObservable()
+  }
+  
   logout(){
     this.firebaseAuth.signOut();
     localStorage.removeItem('user');

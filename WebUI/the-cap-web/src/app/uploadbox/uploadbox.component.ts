@@ -23,8 +23,8 @@ export class UploadboxComponent implements OnInit {
  options: UploaderOptions;
 
  constructor(public authService: AuthService, private router: Router) {
-   //Max filesize set to 5.0 MB
-   this.options = { concurrency: 1, maxUploads: 3, maxFileSize: 1000000 };
+   //Max filesize set to 50.0 MB
+   this.options = { concurrency: 1, maxUploads: 3, maxFileSize: 50000000 };
    this.files = [];
    this.uploadInput = new EventEmitter<UploadInput>();
    this.humanizeBytes = humanizeBytes;
@@ -56,6 +56,7 @@ export class UploadboxComponent implements OnInit {
    } else if (output.type === 'rejected' && typeof output.file !== 'undefined') {
      alert("File '"+output.file.name+"' rejected ! (too large)")
      console.log(output.file.name + ' rejected');
+     console.log(output.file.size + " MB.")
    } else if(output.type === "done"){
      console.log(output)
      if(output.file){

@@ -3,6 +3,8 @@ import { VisualInterpreterQueryService } from '../live-data-services/visual-inte
 import { VideoPlayerComponent } from '../video-player/video-player.component';
 
 import { timer } from 'rxjs';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-live-output-page',
@@ -10,7 +12,7 @@ import { timer } from 'rxjs';
   styleUrls: ['./live-output-page.component.css']
 })
 export class LiveOutputPageComponent implements OnInit, OnDestroy {
-  videoUrl : string = "https://storage.googleapis.com/the-cap-bucket/tennis1.mp4";
+  videoUrl : string = "";
   tries : number = 0;
 
   private answersSubscription;
@@ -19,11 +21,24 @@ export class LiveOutputPageComponent implements OnInit, OnDestroy {
 
   botMessages = [];
 
-  constructor(private vi_api : VisualInterpreterQueryService) {
+  constructor(private vi_api : VisualInterpreterQueryService,
+              public authService: AuthService,
+              private router: Router) {
    }
 
 
   ngOnInit(): void {
+    if (!this.authService.isLoggedIn){
+      this.router.navigate(['/login']);
+    }else{
+      this.authService.firebaseAuth.user.subscribe((user) => {
+        this.authService.retrieveVideoURL(user.uid).subscribe(url =>{
+          this.videoUrl = url
+          this.videoPlayer.videoSource = url
+        })
+
+      });
+    }
   }
 
   addMessage(): void{
