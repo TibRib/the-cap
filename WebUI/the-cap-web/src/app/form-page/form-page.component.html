@@ -1,72 +1,75 @@
-<div>
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css" integrity="sha512-rRQtF4V2wtAvXsou4iUAs2kXHi3Lj9NE7xJR77DE7GHsxgY9RTWy93dzMXgDIG8ToiRTD45VsDNdTiUagOFeZA==" crossorigin="anonymous" />
-  <!-- Sign up form -->
-  <section class="signup" *ngIf="authService.isLoggedIn == true">
-    <div class="container">
-      <div class="signup-content">
-        <div class="signup-form">
-          <h2 class="form-title"> Form </h2>
-          <form method="POST" class="register-form" id="register-form">
-            <div class="form-group">
+<div class="container">
+  <div>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css" integrity="sha512-rRQtF4V2wtAvXsou4iUAs2kXHi3Lj9NE7xJR77DE7GHsxgY9RTWy93dzMXgDIG8ToiRTD45VsDNdTiUagOFeZA==" crossorigin="anonymous" />
+    <!-- Sign up form -->
+    <section class="signup" *ngIf="authService.isLoggedIn == true">
+      <div class="container">
+        <div class="signup-content">
+          <div class="signup-form">
+            <h2 class="form-title"> Form </h2>
+            <form method="POST" class="register-form" id="register-form">
+              <div class="form-group">
 
-              <!-- Sport Selection Dropdown -->
-              <select [required]="true" ngModel name="selectedSport" id="selectedSport" class="custom-select">
-                <option *ngFor="let op of options" [value]="op.value">
-                  {{op.label}}
-                </option>
-              </select>
-            </div>
+                <!-- Sport Selection Dropdown -->
+                <select [required]="true" ngModel name="selectedSport" id="selectedSport" class="custom-select">
+                  <option *ngFor="let op of options" [value]="op.value">
+                    {{op.label}}
+                  </option>
+                </select>
+              </div>
 
-            <!-- Player 1 Input -->
-            <div class="form-group">
-              <label for="play1name"></label>
-              <input mdbInput mdbValidate minlength="8" maxlength="25" type="text" name="email" id="play1name" placeholder="Player 1 - Name"/>
-            </div>
+              <!-- Player 1 Input -->
+              <div class="form-group">
+                <label for="play1name"></label>
+                <input mdbInput mdbValidate minlength="8" maxlength="25" type="text" name="email" id="play1name" placeholder="Player 1 - Name"/>
+              </div>
 
-            <!-- Player 2 Input -->
-            <div class="form-group">
-              <label for="play2name"></label>
-              <input mdbInput mdbValidate minlength="8" maxlength="25" type="text" name="email" id="play2name" placeholder="Player 2 - Name"/>
-            </div>
+              <!-- Player 2 Input -->
+              <div class="form-group">
+                <label for="play2name"></label>
+                <input mdbInput mdbValidate minlength="8" maxlength="25" type="text" name="email" id="play2name" placeholder="Player 2 - Name"/>
+              </div>
 
-            <div class="row" style="margin-left:10px !important;">
-              <div class="col-md-6">
-                <!-- Radio button -->
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input [required]="true" type="radio" class="custom-control-input" id="simplifiedLayout" name="radioButtonLayout" mdbInput>
-                  <label class="custom-control-label" for="simplifiedLayout">Simplified</label>
+              <div class="row" style="margin-left:10px !important;">
+                <div class="col-md-6">
+                  <!-- Radio button -->
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input [required]="true" type="radio" class="custom-control-input" id="simplifiedLayout" name="radioButtonLayout" mdbInput>
+                    <label class="custom-control-label" for="simplifiedLayout">Simplified</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="advancedLayout" name="radioButtonLayout" mdbInput>
+                    <label class="custom-control-label" for="advancedLayout">Advanced</label>
+                  </div>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" class="custom-control-input" id="advancedLayout" name="radioButtonLayout" mdbInput>
-                  <label class="custom-control-label" for="advancedLayout">Advanced</label>
-                </div>
+
+              <!-- Checkbox -->
+              <div class="form-group">
+                <input [required]="true" type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
+                <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in  <a href="#" class="term-service">Terms of service</a></label>
               </div>
-            </div>
 
-            <!-- Checkbox -->
-            <div class="form-group">
-              <input [required]="true" type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
-              <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in  <a href="#" class="term-service">Terms of service</a></label>
-            </div>
+              <!-- Button -->
+              <div class="form-group form-button">
+                <input (click)="nextView()" type="submit" name="sendForm" id="sendForm" class="form-submit" value="Send"/>
+              </div>
 
-            <!-- Button -->
-            <div class="form-group form-button">
-              <input (click)="nextView()" type="submit" name="sendForm" id="sendForm" class="form-submit" value="Send"/>
-            </div>
-
-          </form>
-        </div>
-        <div class="signup-image">
-          <figure><img src="https://i.pinimg.com/originals/f0/59/45/f05945b3f8021150c0a3403a1cd2a004.jpg" alt="sing up image"></figure>
+            </form>
+          </div>
+          <div class="signup-image">
+            <figure><img src="https://i.pinimg.com/originals/f0/59/45/f05945b3f8021150c0a3403a1cd2a004.jpg" alt="sing up image"></figure>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
+  </div>
 </div>
+
 
 

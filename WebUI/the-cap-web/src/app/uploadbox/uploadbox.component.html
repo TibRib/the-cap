@@ -1,50 +1,51 @@
+<div class="container">
 
-<h1 class="text-center" style="font-size:32px">Please, <b>upload your video</b> below</h1>
-<hr>
-<div class="columns is-multiline">
+  <h1 class="text-center" style="font-size:32px">Please, <b>upload your video</b> below</h1>
+  <hr>
+  <div class="columns is-multiline">
     <div class="column is-6 is-offset-3">
-    <div class="upload-box">
+      <div class="upload-box">
         <div class="upload-box-header">
-        <div class="control-circles">
+          <div class="control-circles">
             <span class="circle is-green"></span>
             <span class="circle is-yellow"></span>
             <span class="circle is-red"></span>
-        </div>
-        
-        <div class="header-title">
+          </div>
+
+          <div class="header-title">
             <h2>ngx-file uploader</h2>
-        </div>
-        <div class="gh-icon">
+          </div>
+          <div class="gh-icon">
             <i class="ionicon ion-social-github"></i>
-         </div>
+          </div>
         </div>
         <div class="upload-box-content">
-        <div class="drop-container" ngFileDrop [options]="options" (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput">
+          <div class="drop-container" ngFileDrop [options]="options" (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput">
             <p>
-            Drag your file here or
-            <label class="upload-button">
+              Drag your file here or
+              <label class="upload-button">
                 <input type="file" ngFileSelect [options]="options" (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput" multiple> browse
-            </label>
-            to upload.
+              </label>
+              to upload.
             </p>
-        </div>
-        <div class="upload-item" *ngFor="let f of files; let i = index;">
+          </div>
+          <div class="upload-item" *ngFor="let f of files; let i = index;">
             <div class="upload-item-content">
-            <div class="filename">
+              <div class="filename">
                 <div class="filename-left">
-                <i class="ionicon ion-ios-copy"></i>
-                <span>{{ f.name }}</span>
+                  <i class="ionicon ion-ios-copy"></i>
+                  <span>{{ f.name }}</span>
                 </div>
                 <div class="filename-right">
-                <i class="ionicon ion-close-round" (click)="cancelUpload(f.id)"></i>
+                  <i class="ionicon ion-close-round" (click)="cancelUpload(f.id)"></i>
                 </div>
-            </div>
-            <div class="progress-content">
+              </div>
+              <div class="progress-content">
                 <div class="progress">
-                <span class="bar" [style.width]="f?.progress?.data?.percentage + '%'" [class.is-done]="f?.progress?.data?.percentage === 100"></span>
+                  <span class="bar" [style.width]="f?.progress?.data?.percentage + '%'" [class.is-done]="f?.progress?.data?.percentage === 100"></span>
                 </div>
-            </div>
-            <div class="progress-text-content">
+              </div>
+              <div class="progress-text-content">
                 <span class="progress-text" [class.is-done]="f?.progress?.data?.percentage === 100">
                 <span>{{ f.progress?.data?.percentage }}% </span>
                 <span *ngIf="f.progress?.data?.percentage !== 100">Uploading...</span>
@@ -54,9 +55,9 @@
                 <span>{{ f.progress?.data?.speedHuman }} </span>
                 <span>ETA {{ f.progress?.data?.etaHuman }}</span>
                 </span>
+              </div>
             </div>
-            </div>
-        </div>
+          </div>
         </div>
         <div class="help-text">
         <span> All files are immediately sent to the online directory (called bucket) or rejected.
@@ -64,6 +65,7 @@
              Go to <a href="https://console.cloud.google.com/storage/browser?hl=fr&project=the-cap-gcp">our Bucket link</a> to check your uploads
         </span>
         </div>
+      </div>
     </div>
-    </div>
+  </div>
 </div>

@@ -16,9 +16,9 @@ import { Component } from '@angular/core';
   </nav>
   <!-- contenu dans un container -->
   <div class="jumbotron min-vh-100">
-      <div class="container">
-          <router-outlet></router-outlet>
-      </div>
+    <div routerLink="">
+        <router-outlet></router-outlet>
+    </div>
   </div>
   `,
 styles: []
