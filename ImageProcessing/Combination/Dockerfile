@@ -28,6 +28,7 @@ WORKDIR /root/darknet
 # -- CPU = DEFAULT BUILD [Inherits BASE] -- #
 FROM base AS cpu-version
 RUN sed -i 's/AVX=0/AVX=1/; s/OPENMP=0/OPENMP=1/; s/OPENCV=0/OPENCV=1/' Makefile
+RUN sed -i 's/width=608/width=512/; s/height=608/height=512/;' cfg/yolov4.cfg
 ENV VERSION=CPU
 
 # -- GPU = CUDA SPECIFIC BUILD [Inherits CPU] -- #

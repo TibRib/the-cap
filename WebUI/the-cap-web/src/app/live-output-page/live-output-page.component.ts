@@ -61,8 +61,9 @@ export class LiveOutputPageComponent implements OnInit, OnDestroy {
                   if(this.botMessages.length == 0 ){
                     this.videoPlayer.play();
                   }
-                  if(r.deductions[i] && r.deductions[i].text){
-                    this.botMessages.push(seconds+"s : "+r.deductions[i].text);
+                  if(r.deductions[i]){
+                    let sec = r.deductions[i].frame_id / 25.0
+                    this.botMessages.push(sec+"s : "+r.deductions[i].text);
                   }
                 }
             }

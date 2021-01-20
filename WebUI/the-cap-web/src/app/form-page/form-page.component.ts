@@ -23,7 +23,6 @@ export class FormPageComponent implements OnInit {
   constructor(public authService: AuthService, private router: Router, private tts: TtsService, private decode: Decode64Service) {
     authService.firebaseAuth.user.subscribe((user) => {
       this.user = user;
-      authService.updateVideoURL('http://test.fr', user.uid);
     });
     tts.getAudioFile('Sound Quality Test').subscribe((data) => {
       console.log(data);
