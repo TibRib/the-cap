@@ -20,10 +20,21 @@ export class VisualInterpreterQueryService {
     return obs.asObservable();
   }
 
-  postURL(u : string) : void{
+  postURL(u : string) : Observable<boolean>{
+    console.log("CALLED")
+    let success : Subject<boolean> = new Subject<boolean>()
     let to_send : VisualInterpreterRequest = { media_url : u}
     this.http.post("/visualAPI", to_send).subscribe( r => {
       console.log("VI POST response : "+r);
-    })
+      success.next(true)
+    }, error => {
+      console.log(error)
+      if(error.status == 200){
+        success.next(true)
+      }else{
+        success.next(false)
+      }
+    });
+    return success.asObservable()
   }
 }
