@@ -77,8 +77,12 @@ func (h *API_Handlers) get(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	//TODO : Remplacer par véritable data
 	//data := mockupResponseData(25)
-	var nbFrames =749
-	var media_infos MediaInfos = MediaInfos{Url: "my_url", Duration: (nbFrames/25)}
+	var nbFrames int = 0
+	var d_len = len(deducted)
+	if d_len > 0{
+		nbFrames = deducted[d_len-1].FrameID
+	}
+	var media_infos MediaInfos = MediaInfos{Url: "my_url", Duration: 0}
 	data := ResponseData{ Media: media_infos, FramesProcessed: nbFrames, Deductions : deducted }
 
 	//Clear the deduction array
