@@ -2,6 +2,8 @@ import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 import {AuthService} from '../services/auth.service';
 import { Router } from '@angular/router';
 
+const NEXT_VIEW = '/upload'
+
 @Component({
   selector: 'app-form-page',
   templateUrl: './form-page.component.html',
@@ -26,6 +28,11 @@ export class FormPageComponent implements OnInit {
   logout(){
     this.authService.logout();
     this.isLogut.emit();
+  }
+
+  //Redirection to a page - To change
+  nextView() : void{
+    this.router.navigate([NEXT_VIEW]);
   }
 
 }

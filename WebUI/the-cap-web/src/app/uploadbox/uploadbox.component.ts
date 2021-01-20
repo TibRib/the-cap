@@ -3,6 +3,9 @@ import { GCS_StorageService } from '../cloud-storage-services/gcs-storage.servic
 import { HttpClient } from '@angular/common/http';
 import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions, UploadStatus } from 'ngx-uploader';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
+
+const NEXT_VIEW = '/live'
 
 @Component({
   selector: 'app-uploadbox',
@@ -19,15 +22,13 @@ export class UploadboxComponent implements OnInit {
  dragOver: boolean;
  options: UploaderOptions;
 
- constructor(public authService: AuthService) {
+ constructor(public authService: AuthService, private router: Router) {
    //Max filesize set to 5.0 MB
    this.options = { concurrency: 1, maxUploads: 3, maxFileSize: 1000000 };
    this.files = [];
    this.uploadInput = new EventEmitter<UploadInput>();
    this.humanizeBytes = humanizeBytes;
  }
-  ngOnInit(): void {
-  }
 
  onUploadOutput(output: UploadOutput): void {
    if (output.type === 'allAddedToQueue') {
@@ -97,5 +98,17 @@ export class UploadboxComponent implements OnInit {
  removeAllFiles(): void {
    this.uploadInput.emit({ type: 'removeAll' });
  }
+
+ //Makes sure the user is authentified
+ ngOnInit(): void {
+    if (!this.authService.isLoggedIn){
+      this.router.navigate(['/login']);
+    }
+  }
+
+  //Redirection to a page - To change
+  nextView() : void{
+    this.router.navigate([NEXT_VIEW]);
+  }
 
 }
