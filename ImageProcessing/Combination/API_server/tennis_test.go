@@ -40,6 +40,20 @@ func TestFindRackets(t* testing.T){
 	}
 }
 
+func TestFindBall(t* testing.T){
+	objs := []DetectedObject{
+		DetectedObject{ClassId:0, Name:"tennis racket", Confidence:1.0, Coords:BBox{CenterX:0.456400, CenterY:0.846349, Width:0.077099, Height:0.253434}},
+		DetectedObject{ClassId:0, Name:"chair", Confidence:1.0, Coords:BBox{CenterX:0.191585, CenterY:0.478454, Width:0.039324, Height:0.086070}},
+		DetectedObject{ClassId:0, Name:"sports ball", Confidence:1.0, Coords:BBox{CenterX:0.775891, CenterY:0.423228, Width:0.036892, Height:0.086447}},
+	}
+	var expected DetectedObject = DetectedObject{ClassId:0, Name:"sports ball", Confidence:1.0, Coords:BBox{CenterX:0.775891, CenterY:0.423228, Width:0.036892, Height:0.086447}}
+	var got_ptr *DetectedObject = FindBall(objs)
+	var got DetectedObject = *got_ptr
+	if got != expected{
+		t.Errorf("Obtained %s, Expected { ... Name:'sports ball' }",got)
+	}
+}
+
 func TestFindPlayers(t *testing.T){
 	objs := []DetectedObject{ //Standard approach : no rackets
 		DetectedObject{ClassId:0, Name:"person", Confidence:1.0, Coords:BBox{CenterX:0.456400, CenterY:0.846349, Width:0.077099, Height:0.253434}},
