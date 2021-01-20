@@ -19,6 +19,8 @@ import {AngularFirestoreModule} from '@angular/fire/firestore';
 import {AuthService} from './services/auth.service';
 import { NgxUploaderModule } from 'ngx-uploader';
 import { LiveOutputPageComponent } from './live-output-page/live-output-page.component';
+import { StatsComponent } from './stats/stats.component';
+import { ComparisonComponent } from './comparison/comparison.component';
 import { SignupComponent } from './signup/signup.component';
 
 
@@ -31,7 +33,9 @@ import { SignupComponent } from './signup/signup.component';
     FormPageComponent,
     LoginComponent,
     LiveOutputPageComponent,
-    SignupComponent
+    SignupComponent,
+    StatsComponent,
+    ComparisonComponent
   ],
   imports: [
     HttpClientModule,

@@ -1,0 +1,155 @@
+<!-- Name card -->
+<div class="row">
+    <div class="col-lg-12 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big icon-warning">
+                            <img src="assets/img/mt-sports_tennis.svg" width="30%" alt="Tennis">
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Athlete name</p>
+                            <p class="card-title"> {{this.player.athlete_name}}
+                                <p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ratio & Field card -->
+<div class="row">
+    <div class="col-lg-12 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big icon-warning">
+                            <img src="assets/img/ul-percentage.svg" width="60%" alt="%">
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Win / Loss ratio</p>
+                            <p class="card-title"> {{this.player.wl_ratio}} %
+                                <p>
+                                    <br>
+                        </div>
+                    </div>
+                </div>
+                <canvas #pie_chart height="120"></canvas>
+            </div>
+            <div class="card-footer ">
+                <br>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center icon-warning">
+                            <img src="assets/img/tennis_court.png" width="50%" alt="time">
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Field types </p>
+                            <p class="card-title"> Victories ratio
+                                <p>
+                                    <br>
+                        </div>
+                    </div>
+                </div>
+                <canvas #field_chart height="120"></canvas>
+            </div>
+            <div class="card-footer ">
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Time card-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-stats">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big icon-warning">
+                            <img src="assets/img/mi-clock.svg" width="30%" alt="time">
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Match duration</p>
+                            <p class="card-title"> {{this.player.matches_duration_average}} minutes (Avg.)
+                                <p>
+                                    <br>
+                        </div>
+                    </div>
+                </div>
+                <canvas #time_chart height="120"></canvas>
+            </div>
+            <div class=" card-footer ">
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- useless card-->
+<!--
+<div class="row ">
+    <div class="col-md-4 ">
+        <div class="card ">
+            <div class="card-header ">
+                <h5 class="card-title ">Email Statistics</h5>
+                <p class="card-category ">Last Campaign Performance</p>
+            </div>
+            <div class="card-body ">
+                <canvas id="chartEmail "></canvas>
+            </div>
+            <div class="card-footer ">
+                <div class="legend ">
+                    <i class="fa fa-circle text-primary "></i> Opened
+                    <i class="fa fa-circle text-warning "></i> Read
+                    <i class="fa fa-circle text-danger "></i> Deleted
+                    <i class="fa fa-circle text-gray "></i> Unopened
+                </div>
+                <hr>
+                <div class="stats ">
+                    <i class="fa fa-calendar "></i> Number of emails sent
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 ">
+        <div class="card card-chart ">
+            <div class="card-header ">
+                <h5 class="card-title ">NASDAQ: AAPL</h5>
+                <p class="card-category ">Line Chart with Points</p>
+            </div>
+            <div class="card-body ">
+                <canvas id="speedChart " width="400 " height="100 "></canvas>
+            </div>
+            <div class="card-footer ">
+                <div class="chart-legend ">
+                    <i class="fa fa-circle text-info "></i> Tesla Model S
+                    <i class="fa fa-circle text-warning "></i> BMW 5 Series
+                </div>
+                <hr />
+                <div class="card-stats ">
+                    <i class="fa fa-check "></i> Data information certified
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
