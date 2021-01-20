@@ -20,15 +20,11 @@ export class FormPageComponent implements OnInit {
 
   @Output() isLogut = new EventEmitter<void>();
 
-  constructor(public authService: AuthService, private router: Router, private tts: TtsService, private decode: Decode64Service) {
+  constructor(public authService: AuthService, private router: Router) {
     authService.firebaseAuth.user.subscribe((user) => {
       this.user = user;
     });
-    tts.getAudioFile('Sound Quality Test').subscribe((data) => {
-      console.log(data);
-    }, error => {
-      decode.decodeAndPlay(error.error.text);
-    });
+    
   }
 
   ngOnInit(): void {
