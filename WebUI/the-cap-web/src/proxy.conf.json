@@ -8,6 +8,15 @@
     "changeOrigin": true
   },
 
+  "/ttsAPI": {
+    "target": "http://0.0.0.0:8181/post",
+    "secure": false,
+    "pathRewrite": {
+      "^/ttsAPI": ""
+    },
+    "changeOrigin": true
+  },
+
   "/visualAPI": {
     "target": "http://localhost:8080"
   }

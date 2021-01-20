@@ -11,7 +11,7 @@ import {Observable} from 'rxjs';
 export class AuthService {
   isLoggedIn = false;
 
-  constructor(public firebaseAuth: AngularFireAuth, private firestore: AngularFirestore, public afs: AngularFirestore) {}
+  constructor(public firebaseAuth: AngularFireAuth, public firestore: AngularFirestore, public afs: AngularFirestore) {}
 
   async signin(email: string, password: string){
     await this.firebaseAuth.signInWithEmailAndPassword(email, password)
