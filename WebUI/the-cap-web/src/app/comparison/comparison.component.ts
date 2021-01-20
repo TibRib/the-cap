@@ -27,7 +27,7 @@ export class ComparisonComponent implements OnInit {
     this.playerA.field_data_total = [200, 230, 600, 900]
     this.playerA.field_perc = [Math.floor(this.playerA.field_data_win[0] / (this.playerA.field_data_total[0]) * 100), Math.floor(this.playerA.field_data_win[1] / (this.playerA.field_data_total[1]) * 100), Math.floor(this.playerA.field_data_win[2] / (this.playerA.field_data_total[2]) * 100), Math.floor(this.playerA.field_data_win[3] / (this.playerA.field_data_total[3]) * 100)];
     this.playerA.field_label = ["Clay [" + this.playerA.field_perc[0] + ' %]', "Hard [" + this.playerA.field_perc[1] + ' %]', "Carpet [" + this.playerA.field_perc[2] + ' %]', "Grass [" + this.playerA.field_perc[3] + ' %]'];
-
+    this.playerA.matches_duration_average = Math.floor(this.playerA.matches_duration_data.reduce((a,b) => a + b, 0) / this.playerA.matches_duration_data.length);
     }
 
 }
