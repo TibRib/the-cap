@@ -5,25 +5,33 @@
     </div>
 
     <div class="col col-4">
-      <div class="card h-100" (click)="addMessage()">
-        <ul class="list-group m-0 d-block " >
-          <li *ngFor="let msg of botMessages" class="list-group-item ">
-            "{{ msg }}"
-          </li>
-        </ul>
-      </div>
+        <div class="card h-100">
+                <ul class="list-group m-0 d-block " >
+                    <li *ngFor="let msg of botMessages" class="list-group-item ">
+                        {{ msg }}
+                    </li>
+                    
+                </ul>
+                <span *ngIf="loadLabelVisible" class="m-auto text-center text-info"><i>Loading messages...</i></span>
+                <span *ngIf="errorLoading" class="m-auto p-2 text-center text-danger"><i>Error : {{errorLabel}}</i></span>
+        </div>
+        <div class="form-check m-0 p-0">
+            <input id="checkAudio"
+                type="checkbox" class="mx-3"
+                [checked]="audioCommentaries"
+                (change)="audioCommentaries = !audioCommentaries"/>
+            <b><label class="form-check-label" for="checkAudio">Toggle audio commentaries</label></b>
+          </div>
     </div>
   </div>
 
-  <button class="btn btn-primary" (click)="sendVIPost()">Send VI post URL of objectObserver</button>
-  <br>
-
   <div class="row">
     <div class="col">
-      <div class="card w-100 h-100">
+      <div class="card w-100 h-100 mt-3">
         <div class="card-body">
           <h4 class="card-title">Live Analysis</h4>
           <hr>
+            <button class="btn btn-primary" (click)="sendVIPost()">Start the analysis</button>
         </div>
       </div>
     </div>
