@@ -11,6 +11,9 @@ import (
 var prevPlayerTop *Player = nil
 var prevPlayerBtm *Player = nil
 
+// BALL POINTER
+var prevBall *Ball = nil
+
 const(
 	TOP = 0
 	BOTTOM = 1
@@ -18,12 +21,7 @@ const(
 
 func deductFrame(input DarknetData) FrameDeduction {
 	var str string = ""
-	/*
-	str = strconv.Itoa(input.FrameID)+" - I see "
-	for _, obj := range input.Objects{
-		str+= obj.Name+", "
-	}
-	*/
+
 	playersIdentified := FindPlayers(input.Objects)
 	if(playersIdentified != nil){
 		playerTop := (*playersIdentified)[TOP]
@@ -43,6 +41,20 @@ func deductFrame(input DarknetData) FrameDeduction {
 		}
 	}
 
+	ball_ref := FindBall(input.Objects)
+	if(ball_ref != nil){
+		ball := ObjToBall(*ball_ref);
+		str+= "\n Ball position : "+ball.Pos.String()
+		//Ball speed
+		if(prevBall == nil){
+			prevBall = &ball
+		}else{
+			ballMvmt := VecDifference(ball.Pos,(*prevBall).Pos)
+			str += " - moved "+ballMvmt.String()
+			prevBall = &ball
+		}
+	}
+
 	deduct := FrameDeduction{ FrameID : input.FrameID, Text: str }
 	return deduct
 }
@@ -56,6 +68,10 @@ type Vector2 Position;
 type Player struct{
 	Name string
 	Points int
+	Pos Position
+}
+
+type Ball struct{
 	Pos Position
 }
 
@@ -98,6 +114,10 @@ func ObjToPlayer(obj DetectedObject) Player{
 	return Player{Name:"", Points:0, Pos:Position{x:float64(obj.Coords.CenterX), y:float64(obj.Coords.CenterY)}}
 }
 
+func ObjToBall(obj DetectedObject) Ball{
+	return Ball{Pos:Position{x:float64(obj.Coords.CenterX), y:float64(obj.Coords.CenterY)}}
+}
+
 func FindPlayers(objs []DetectedObject) *[2]Player{
 	if(len(objs)==0){
 		return nil
@@ -114,7 +134,7 @@ func FindPlayers(objs []DetectedObject) *[2]Player{
 		var pR []DetectedObject = []DetectedObject{}
 		for i := 0; i < 2; i++ {
 			//Check if one of the players touches the racket
-			for i, v := range persons {
+			for _, v := range persons {
 				if IsTouching(tennisRackets[i].Coords, v.Coords){
 					//We found a player that touches the [i] racket
 					pR = append(pR, v)
@@ -156,6 +176,19 @@ func FindPlayers(objs []DetectedObject) *[2]Player{
 		}
 	}
 	return &players
+}
+
+func FindBall(objs []DetectedObject) *DetectedObject{
+	if(len(objs)==0){
+		return nil
+	}
+	for i := 0; i < len(objs); i++ {
+		if objs[i].Name == "sports ball"{
+			ball := &objs[i]
+			return ball
+		}
+	}
+	return nil
 }
 
 func MinusSquare(a float64,b float64) float64{
