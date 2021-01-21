@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { VisualInterpreterQueryService } from '../live-data-services/visual-interpreter-query.service';
 import { VideoPlayerComponent } from '../video-player/video-player.component';
 
@@ -21,6 +21,8 @@ export class LiveOutputPageComponent implements OnInit, OnDestroy {
   loadLabelVisible = false
   errorLoading = false
   errorLabel = ""
+
+  commentsVolume : number = 30
 
   private answersSubscription;
 
@@ -76,8 +78,9 @@ export class LiveOutputPageComponent implements OnInit, OnDestroy {
                     this.botMessages.push(sec+"s : "+r.deductions[i].text);
                     if(this.audioCommentaries == true){
                       this.commentAudio(r.deductions[i].text)
+                      this.audioCommentaries = false
                     }
-                  }
+                  } 
                 }
             }
         }else{
@@ -136,8 +139,13 @@ export class LiveOutputPageComponent implements OnInit, OnDestroy {
     this.tts.getAudioFile(text).subscribe((data) => {
         console.log(data);
       }, error => {
-        this.decoder.decodeAndPlay(error.error.text);
+        this.decoder.decodeAndPlay(error.error.text, this.commentsVolume/100);
       });
+  }
+
+  setCommentsVolume(value : any){
+    this.commentsVolume = value
+    console.log(this.commentsVolume)
   }
 
 }
