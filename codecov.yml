@@ -1,0 +1,4 @@
+# codecov.yml
+
+fixes:
+  - "/home/runner/work/the-cap/the-cap/::" # Correct paths
