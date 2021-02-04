@@ -1,5 +1,7 @@
 ![The cap banner](img/THE_CAP.png)
 
+[![codecov](https://codecov.io/gh/TibRib/the-cap/branch/main/graph/badge.svg?token=AK2KSROKBR)](https://codecov.io/gh/TibRib/the-cap)
+
 # Meet ```the CAP```
 
 ```the CAP``` is a **student project** aimed toward the <ins>real-time</ins> analysis of **sport games**.
