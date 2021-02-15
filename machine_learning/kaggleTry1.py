@@ -66,7 +66,7 @@ df = df.sample(100000)
 
 # split train/test subsets (80% train, 20% test)
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(df.iloc[:, :-1], df.target, test_size=.2, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(df.iloc[:, :-1], df.target, test_size=.5, random_state=0)
 
 # import classifiers from sklearn
 from sklearn.neural_network import MLPClassifier
@@ -84,7 +84,7 @@ from sklearn.linear_model import PassiveAggressiveClassifier
 # set names and prepare the benchmark list
 names = ["K Near. Neighb.", "Decision Tree", "Random Forest", "Naive Bayes", "Quad. Dis. Ana.", "AdaBoost", 
          "Neural Net" , #"RBF SVM","Linear SVM", 
-         "Ridge Class."
+         "Ridge Class.", "Passive Aggre."
         ]
 
 classifiers = [
@@ -96,9 +96,10 @@ classifiers = [
     AdaBoostClassifier(),
     MLPClassifier(alpha=1, max_iter=1000),
     # too long run for the test
-    # SVC(gamma=2, C=1),
+    #SVC(gamma=2, C=1),
     #SVC(kernel="linear", C=.025),
-    RidgeClassifier(tol=.01, solver="lsqr")
+    RidgeClassifier(tol=.01, solver="lsqr"),
+    PassiveAggressiveClassifier()
 ]
 
 
@@ -111,6 +112,9 @@ ratios = []
 
 import pickle
 from joblib import dump, load
+from pathlib import Path
+data_folder = Path("machine_learning/models/joblib/")
+
 
 for name, clf in zip(names, classifiers):
         print(name, end='')
@@ -118,12 +122,16 @@ for name, clf in zip(names, classifiers):
         score = clf.score(X_test, y_test)
 
         #saving model
-        #filename = 'machine_learning\models\\' + name.replace(' ', '_').replace('.', '') + '.sav'
-        #pickle.dump(clf, open(filename, 'wb'))
-        #dump(clf, 'machine_learning\models\joblib\\' + name.replace(' ', '_').replace('.', '') + '.joblib')
+        nameFile = name
+        nameFile = nameFile.replace(' ', '_').replace('.', '')
+        nameFile += '.joblib'
+        filename = data_folder / nameFile
+        
+        #pickle.dump(clf, open(filename + '.sav', 'wb'))
+        #dump(clf, filename)
 
-        print('\t\t', round(score, 3), '%', '\t\t', round(time.time() - tim, 2), '\t\t', round(score / (time.time() - tim), 3))
-        ratios.append( round(score, 3) / round(time.time() - tim, 3))
+        print('\t\t', round(score * 100 , 3) , '%', '\t\t', round(time.time() - tim, 2), '\t\t', round(score / (time.time() - tim), 3))
+        ratios.append( round(score * 100 , 3) / round(time.time() - tim, 3))
         scores.append(score)
         tim = time.time()
 
