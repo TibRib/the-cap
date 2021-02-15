@@ -110,6 +110,7 @@ scores = []
 ratios = []
 
 import pickle
+from joblib import dump, load
 
 for name, clf in zip(names, classifiers):
         print(name, end='')
@@ -117,8 +118,9 @@ for name, clf in zip(names, classifiers):
         score = clf.score(X_test, y_test)
 
         #saving model
-        filename = 'machine_learning\models\\' + name.replace(' ', '_').replace('.', '') + '.sav'
-        pickle.dump(clf, open(filename, 'wb'))
+        #filename = 'machine_learning\models\\' + name.replace(' ', '_').replace('.', '') + '.sav'
+        #pickle.dump(clf, open(filename, 'wb'))
+        #dump(clf, 'machine_learning\models\joblib\\' + name.replace(' ', '_').replace('.', '') + '.joblib')
 
         print('\t\t', round(score, 3), '%', '\t\t', round(time.time() - tim, 2), '\t\t', round(score / (time.time() - tim), 3))
         ratios.append( round(score, 3) / round(time.time() - tim, 3))
