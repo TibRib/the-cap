@@ -33,6 +33,8 @@
           <hr>
             <button class="btn btn-primary" (click)="sendVIPost()">Start the analysis</button>
             <hr>
+            <img class="w-100" src="{{resUrl}}" />
+            <hr>
             <div class="d-block mx-2 w-100">
               <label for="myRange">Set the next comments volume: </label>
               <input type="range" #mySlider min="1" max="100" value="30" class="slider" id="myRange" (change)="setCommentsVolume(mySlider.value)">
@@ -43,4 +45,5 @@
     </div>
   </div>
 </div>
+
 

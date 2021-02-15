@@ -23,6 +23,7 @@ export class LiveOutputPageComponent implements OnInit, OnDestroy {
   errorLabel = ""
 
   commentsVolume : number = 30
+  resUrl = ""
 
   private answersSubscription;
 
@@ -72,6 +73,7 @@ export class LiveOutputPageComponent implements OnInit, OnDestroy {
                   if(r.deductions[i]){
                     if(this.botMessages.length == 0 && r.deductions[i].text){
                       this.loadLabelVisible = false
+                      this.resUrl = "http://localhost:9991/"
                       this.videoPlayer.play();
                     }
                     let sec = r.deductions[i].frame_id / 25.0

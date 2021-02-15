@@ -165,6 +165,7 @@ var APIHandler *API_Handlers
 
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
+
 	APIHandler = newAPI_Handler()
 	http.HandleFunc("/", APIHandler.request)
 	log.Printf("SERVER API RUNNING ON PORT 8080\n")

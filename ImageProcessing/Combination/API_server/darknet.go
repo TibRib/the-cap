@@ -79,7 +79,10 @@ func decodeJSON(r *http.Response, print_results bool){
 			deducted = nil
 			deducted = []FrameDeduction{}
 		}
-		deducted = append(deducted, deductFrame(m))
+		Fdeduction := deductFrame(m)
+		if len(Fdeduction.Text)>0{
+			deducted = append(deducted, deductFrame(m))
+		}
 	}
 	// read closing bracket
 	t, err = dec.Token()
@@ -101,10 +104,11 @@ func launchDetection(url string){
 		url,
 		"-i","0",
 		"-json_port","8070",
+		"-mjpeg_port","8090",
 		"-dont_show",
 		"-width","800",
 		"-height","450",
-		"-dontdraw_bbox",
+		//"-dontdraw_bbox",
 		)
 	buf := &bytes.Buffer{}
 	cmd.Stdout = buf
