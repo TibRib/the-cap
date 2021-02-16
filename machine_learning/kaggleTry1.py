@@ -13,11 +13,11 @@ df.info()
 
 
 # these variables do not seem relevant to me. might be assessed in a further work
-df = df.drop(columns=['tourney_id','tourney_name','tourney_date','match_num','winner_entry','loser_entry','winner_id','winner_name','score','loser_id','loser_name'])
+df = df.drop(columns=['tourney_id','tourney_name','tourney_date','match_num','winner_entry','loser_entry','winner_name','score','loser_name'])
 
 # convert numeric varibales to the correct type (csv_read fct does not make auto convert)
 col_names_to_convert = ['winner_seed','draw_size','winner_ht','winner_age','winner_rank','winner_rank_points',
-                       'loser_seed','loser_ht','loser_age','loser_rank','loser_rank_points','best_of','minutes',
+                        'loser_seed','loser_ht','loser_age','loser_rank','loser_rank_points','best_of','minutes',
                        'w_ace','w_df','w_svpt','w_1stIn','w_1stWon','w_2ndWon','w_SvGms','w_bpSaved','w_bpFaced',
                        'l_ace','l_df','l_svpt','l_1stIn','l_1stWon','l_2ndWon','l_SvGms','l_bpSaved','l_bpFaced'
                        ]
@@ -35,8 +35,8 @@ df['target'] = np.zeros(df.shape[0], dtype = int)
 # generate data by switching among P1 and P2 (target will be P2)
 df2 = df.copy()
 # switch between variables from P1 and those from P2
-df2[['winner_seed','winner_hand','winner_ht','winner_ioc','winner_age','winner_rank','winner_rank_points']] = df[['loser_seed','loser_hand','loser_ht','loser_ioc','loser_age','loser_rank','loser_rank_points']]
-df2[['loser_seed','loser_hand','loser_ht','loser_ioc','loser_age','loser_rank','loser_rank_points']] = df[['winner_seed','winner_hand','winner_ht','winner_ioc','winner_age','winner_rank','winner_rank_points']]
+df2[['winner_id', 'winner_seed','winner_hand','winner_ht','winner_ioc','winner_age','winner_rank','winner_rank_points']] = df[['loser_id', 'loser_seed','loser_hand','loser_ht','loser_ioc','loser_age','loser_rank','loser_rank_points']]
+df2[['loser_id', 'loser_seed','loser_hand','loser_ht','loser_ioc','loser_age','loser_rank','loser_rank_points']] = df[['winner_id', 'winner_seed','winner_hand','winner_ht','winner_ioc','winner_age','winner_rank','winner_rank_points']]
 df2[['w_ace','w_df','w_svpt','w_1stIn','w_1stWon','w_2ndWon','w_SvGms','w_bpSaved','w_bpFaced']] = df[['l_ace','l_df','l_svpt','l_1stIn','l_1stWon','l_2ndWon','l_SvGms','l_bpSaved','l_bpFaced']]
 df2[['l_ace','l_df','l_svpt','l_1stIn','l_1stWon','l_2ndWon','l_SvGms','l_bpSaved','l_bpFaced']] = df[['w_ace','w_df','w_svpt','w_1stIn','w_1stWon','w_2ndWon','w_SvGms','w_bpSaved','w_bpFaced']]
 df2['target'] = np.ones(df2.shape[0], dtype = int)
@@ -66,7 +66,7 @@ df = df.sample(100000)
 
 # split train/test subsets (80% train, 20% test)
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(df.iloc[:, :-1], df.target, test_size=.5, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(df.iloc[:, :-1], df.target, test_size=.2, random_state=0)
 
 # import classifiers from sklearn
 from sklearn.neural_network import MLPClassifier
@@ -113,7 +113,8 @@ ratios = []
 import pickle
 from joblib import dump, load
 from pathlib import Path
-data_folder = Path("machine_learning/models/joblib/")
+data_folder_pkl = Path("machine_learning/models/pickle/")
+data_folder_jl = Path("machine_learning/models/joblib/")
 
 
 for name, clf in zip(names, classifiers):
@@ -124,11 +125,13 @@ for name, clf in zip(names, classifiers):
         #saving model
         nameFile = name
         nameFile = nameFile.replace(' ', '_').replace('.', '')
-        nameFile += '.joblib'
-        filename = data_folder / nameFile
+        nameFile_pkl = nameFile + '.pkl'
+        nameFile_jl = nameFile + '.joblib'
+        filename_pkl = data_folder_pkl / nameFile_pkl
+        filename_jl = data_folder_jl / nameFile_jl
         
-        #pickle.dump(clf, open(filename + '.sav', 'wb'))
-        #dump(clf, filename)
+        pickle.dump(clf, open(filename_pkl, 'wb'))
+        dump(clf, filename_jl)
 
         print('\t\t', round(score * 100 , 3) , '%', '\t\t', round(time.time() - tim, 2), '\t\t', round(score / (time.time() - tim), 3))
         ratios.append( round(score * 100 , 3) / round(time.time() - tim, 3))
