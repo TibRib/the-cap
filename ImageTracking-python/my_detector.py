@@ -10,9 +10,6 @@ from yolo import YOLO
 import os
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
-import tensorflow as tf
-
-from utils import convert_boxes
 import matplotlib.pyplot as plt
 
 from deep_sort import preprocessing
@@ -41,7 +38,7 @@ def main(yolo):
     writeVideo_flag = True
     asyncVideo_flag = False
 
-    file_path = 'data/video.mp4'
+    file_path = "https://storage.googleapis.com/the-cap-bucket/Maria_Sharapova_Vs_Caroline_Wozniacki_3.mp4"
 
     if asyncVideo_flag : #Real time aynchronous frame tracking
         vid = VideoCaptureAsync(file_path)
