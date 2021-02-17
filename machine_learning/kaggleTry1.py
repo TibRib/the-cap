@@ -6,9 +6,9 @@ import time
 from sklearn.preprocessing import LabelEncoder
 
 df = pd.read_csv('machine_learning\csv\ATP.csv', low_memory=False)
-print(df.shape)
-df.head()
-df.info()
+#print(df.shape)
+#df.head()
+#df.info()
 
 
 
@@ -18,9 +18,10 @@ df = df.drop(columns=['tourney_id','tourney_name','tourney_date','match_num','wi
 # convert numeric varibales to the correct type (csv_read fct does not make auto convert)
 col_names_to_convert = ['winner_seed','draw_size','winner_ht','winner_age','winner_rank','winner_rank_points',
                         'loser_seed','loser_ht','loser_age','loser_rank','loser_rank_points','best_of','minutes',
-                       'w_ace','w_df','w_svpt','w_1stIn','w_1stWon','w_2ndWon','w_SvGms','w_bpSaved','w_bpFaced',
-                       'l_ace','l_df','l_svpt','l_1stIn','l_1stWon','l_2ndWon','l_SvGms','l_bpSaved','l_bpFaced'
+                        'w_ace','w_df','w_svpt','w_1stIn','w_1stWon','w_2ndWon','w_SvGms','w_bpSaved','w_bpFaced',
+                        'l_ace','l_df','l_svpt','l_1stIn','l_1stWon','l_2ndWon','l_SvGms','l_bpSaved','l_bpFaced'
                        ]
+
 for col_name in col_names_to_convert:
     df[col_name] = pd.to_numeric(df[col_name], errors='coerce')
 
@@ -43,7 +44,7 @@ df2['target'] = np.ones(df2.shape[0], dtype = int)
 
 df = df.append(df2)
 
-print(df.head(2).append(df.tail(2)))
+#print(df.head(2).append(df.tail(2)))
 
 lb = LabelEncoder()
 df['surface'] = lb.fit_transform(df['surface'].astype(str))
@@ -133,7 +134,7 @@ for name, clf in zip(names, classifiers):
         pickle.dump(clf, open(filename_pkl, 'wb'))
         dump(clf, filename_jl)
 
-        print('\t\t', round(score * 100 , 3) , '%', '\t\t', round(time.time() - tim, 2), '\t\t', round(score / (time.time() - tim), 3))
+        print('\t\t', round(score * 100 , 3) , '%', '\t\t', round(time.time() - tim, 2), '\t\t', round(score * 2 / (time.time() - tim), 3))
         ratios.append( round(score * 100 , 3) / round(time.time() - tim, 3))
         scores.append(score)
         tim = time.time()

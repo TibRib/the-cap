@@ -1,0 +1,9 @@
+['loser_hand', 'loser_id', 'loser_ioc', 'loser_seed', 'round', 'surface', 'tourney_level', 'winner_hand', 'winner_id', 'winner_ioc', 'winner_seed']
+[47.531 %] - AdaBoost
+[15.844 %] - Decision_Tree
+[51.107 %] - K_Near_Neighb
+[99.975 %] - Naive_Bayes
+[0000.0 %] - Neural_Net
+[39.518 %] - Passive_Aggre
+[75.883 %] - Quad_Dis_Ana
+[81.553 %] - Random_Forest

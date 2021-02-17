@@ -1,0 +1,9 @@
+['best_of', 'draw_size', 'loser_age', 'loser_hand', 'loser_ht', 'loser_id', 'loser_ioc', 'loser_rank', 'loser_rank_points', 'loser_seed', 'minutes', 'round', 'surface', 'tourney_level', 'winner_age', 'winner_hand', 'winner_ht', 'winner_id', 'winner_ioc', 'winner_rank', 'winner_rank_points', 'winner_seed']
+[72.072 %] - AdaBoost
+[67.312 %] - Decision_Tree
+[88.448 %] - K_Near_Neighb
+[05.003 %] - Naive_Bayes
+[02.635 %] - Neural_Net
+[89.159 %] - Passive_Aggre
+[73.861 %] - Quad_Dis_Ana
+[77.605 %] - Random_Forest
