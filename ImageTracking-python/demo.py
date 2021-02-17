@@ -37,9 +37,9 @@ def main(yolo):
 
     tracking = False
     writeVideo_flag = False
-    asyncVideo_flag = True
+    asyncVideo_flag = False
 
-    file_path = 'data/match.mp4'
+    file_path = 'data/cars_around_mountain.avi'
     if asyncVideo_flag :
         video_capture = VideoCaptureAsync(file_path)
     else:
