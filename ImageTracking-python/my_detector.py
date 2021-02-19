@@ -46,10 +46,8 @@ def drawZone(event,x,y,flags,param):
     if event == cv2.EVENT_LBUTTONDOWN:
         ix,iy = x,y
     elif event == cv2.EVENT_LBUTTONUP:
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
         newz = DetectionZone("person", AABB( ix, iy, x, y))
         zones.append( newz )
-        print(newz.aabb)
 
 def main(yolo):
     global zones
@@ -180,9 +178,8 @@ def main(yolo):
         for i,zone in enumerate(zones):
             cv2.putText(img, "Persons in zone "+str(i)+" : "+str(zone.count()), (0, 80+ 40*i), 0, 1, (0, 0, 255), 2)
 
-
         fps = 1./(time.time()-t1)
-        print(len(zones))
+
         if asyncVideo_flag:
             cv2.putText(img, "Async FPS: {:.2f}".format(fps), (0,30), 0, 1, (0,0,255), 2)
         else:
