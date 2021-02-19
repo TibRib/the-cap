@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 from PIL import Image
 from yolo import YOLO
+from .zones import DetectionZone, Vector2, AABB
 
 import os
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -22,10 +23,12 @@ import imutils.video
 from videocaptureasync import VideoCaptureAsync
 warnings.filterwarnings('ignore')
 
+import jsonstreams
+
 def main(yolo):
-    max_cosine_distance = 0.5
+    max_cosine_distance = 0.3
     nn_budget = None
-    nms_max_overlap = 0.8
+    nms_max_overlap = 1.0
 
     #Deep SORT properties:
     model_filename = 'model_data/mars-small128.pb'
@@ -36,9 +39,12 @@ def main(yolo):
     #OpenCV properties + video input
     tracking = True
     writeVideo_flag = True
-    asyncVideo_flag = False
+    asyncVideo_flag = True
 
-    file_path = "https://storage.googleapis.com/the-cap-bucket/Maria_Sharapova_Vs_Caroline_Wozniacki_3.mp4"
+    #file_path = "http://46.151.101.149:8081/?action=stream"
+    
+    file_path = "http://46.151.101.149:8081/?action=stream"
+
 
     if asyncVideo_flag : #Real time aynchronous frame tracking
         vid = VideoCaptureAsync(file_path)
@@ -65,6 +71,10 @@ def main(yolo):
     from _collections import deque
     pts = [deque(maxlen=50) for _ in range(1000)]
 
+    zones = [
+        DetectionZone("person",AABB(20,20,100,100))
+        ]
+
     counter = []
 
     while True: #detections loop
@@ -75,7 +85,9 @@ def main(yolo):
 
         t1 = time.time()
 
-        image = Image.fromarray(img[...,::-1])  # bgr to rgb
+        #image = Image.fromarray(img[...,::-1])  # bgr to rgb
+        image = Image.fromarray(img[...])  # bgr to rgb
+
         boxes, confidence, classes = yolo.detect_image(image)
 
         #tracking by default
@@ -94,11 +106,19 @@ def main(yolo):
         detections = [detections[i] for i in indices]
 
 
-        cmap = plt.get_cmap('tab20b')
-        colors = [cmap(i)[:3] for i in np.linspace(0,1,20)]
+  #      cmap = plt.get_cmap('tab20b')
+   #     colors = [cmap(i)[:3] for i in np.linspace(0,1,20)]
 
         current_count = int(0)
 
+        for det in detections:
+                bbox = det.to_tlbr()
+                #score = "%.2f" % round(det.confidence * 100, 2) + "%"
+                cv2.rectangle(img, (int(bbox[0]),int(bbox[1])), (int(bbox[2]),int(bbox[3])), (0, 200, 0), 2)
+                if len(classes) > 0: #Display the class name
+                    class_name= str(det.cls)
+                    cv2.rectangle(img, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name)*17), int(bbox[1])), (0, 200, 0), -1)
+                    cv2.putText(img, class_name, (int(bbox[0]), int(bbox[1]-10)), 0, 0.75,(255, 255, 255), 2)
         
         if tracking:
             tracker.predict()
@@ -107,17 +127,9 @@ def main(yolo):
             for track in tracker.tracks:
                 if not track.is_confirmed() or track.time_since_update >1:
                     continue
-                
-                color = colors[int(track.track_id) % len(colors)]
-                color = [i * 255 for i in color]
+
                 bbox = track.to_tlbr()
-                class_name= "obj"
-                #score = "%.2f" % round(det.confidence * 100, 2) + "%"
-                cv2.rectangle(img, (int(bbox[0]),int(bbox[1])), (int(bbox[2]),int(bbox[3])), color, 2)
-                cv2.rectangle(img, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name)
-                            +len(str(track.track_id))+1)*17, int(bbox[1])), color, -1)
-                cv2.putText(img, class_name+"-"+str(track.track_id), (int(bbox[0]), int(bbox[1]-10)), 0, 0.75,
-                            (255, 255, 255), 2)
+                cv2.putText(img, str(track.track_id), (int(bbox[0]+20), int(bbox[1]-10)), 0, 0.75,(0,0,0), 2)
 
                 center = (int(((bbox[0]) + (bbox[2]))/2), int(((bbox[1])+(bbox[3]))/2))
                 pts[track.track_id].append(center)
@@ -126,7 +138,10 @@ def main(yolo):
                     if pts[track.track_id][j-1] is None or pts[track.track_id][j] is None:
                         continue
                     thickness = int( max(1, 8*(j/len(pts[track.track_id]))))
-                    cv2.line(img, (pts[track.track_id][j-1]), (pts[track.track_id][j]), color, thickness)
+                    cv2.line(img, (pts[track.track_id][j-1]), (pts[track.track_id][j]), (0,0,200), thickness)
+                
+                for zone in zones:
+                    zone.draw_cv2(img)
         else:
             for det in detections:
                 bbox = det.to_tlbr()
@@ -139,10 +154,16 @@ def main(yolo):
 
 
         total_count = len(set(counter))
-        #cv2.putText(img, "Joueurs dans la zone: " + str(current_count), (0, 80), 0, 1, (0, 0, 255), 2)
+        cv2.putText(img, "Joueurs dans la zone: " + str(current_count), (0, 80), 0, 1, (0, 0, 255), 2)
+
+        appendToFile("The player got in the close zone")
+
 
         fps = 1./(time.time()-t1)
-        cv2.putText(img, "FPS: {:.2f}".format(fps), (0,30), 0, 1, (0,0,255), 2)
+        if asyncVideo_flag:
+            cv2.putText(img, "Async FPS: {:.2f}".format(fps), (0,30), 0, 1, (0,0,255), 2)
+        else:
+            cv2.putText(img, "FPS: {:.2f}".format(fps), (0,30), 0, 1, (0,0,255), 2)
 
         cv2.imshow('output', img)
         
@@ -167,3 +188,9 @@ def main(yolo):
 
 if __name__ == '__main__':
     main(YOLO())
+
+def appendToFile(info):
+    f = open("result/output.txt", "a") #Open the file in append mode
+    f.write(info+"\n")
+    f.close()
+    return
