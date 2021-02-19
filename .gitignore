@@ -48,3 +48,4 @@ testem.log
 .DS_Store
 Thumbs.db
 sqLiteDB/sql/tennisReal.db
+ImageTracking-python/result/output.txt

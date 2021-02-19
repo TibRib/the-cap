@@ -5,8 +5,9 @@ import warnings
 import cv2
 import numpy as np
 from PIL import Image
+from numpy.core.fromnumeric import size
 from yolo import YOLO
-from .zones import DetectionZone, Vector2, AABB
+from custom.zones import DetectionZone, AABB, Vector2
 
 import os
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -25,7 +26,33 @@ warnings.filterwarnings('ignore')
 
 import jsonstreams
 
+def appendToFile(info):
+    f = open("result/output.txt", "a") #Open the file in append mode
+    f.write(info+"\n")
+    f.close()
+    return
+
+def writeToFile(info):
+    f = open("result/output.txt", "w") #Open the file in append mode
+    f.write(info+"\n")
+    f.close()
+    return
+
+zones = []
+ix,iy = -1,-1
+
+def drawZone(event,x,y,flags,param):
+    global ix,iy,zones
+    if event == cv2.EVENT_LBUTTONDOWN:
+        ix,iy = x,y
+    elif event == cv2.EVENT_LBUTTONUP:
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        newz = DetectionZone("person", AABB( ix, iy, x, y))
+        zones.append( newz )
+        print(newz.aabb)
+
 def main(yolo):
+    global zones
     max_cosine_distance = 0.3
     nn_budget = None
     nms_max_overlap = 1.0
@@ -39,12 +66,13 @@ def main(yolo):
     #OpenCV properties + video input
     tracking = True
     writeVideo_flag = True
-    asyncVideo_flag = True
+    asyncVideo_flag = False
 
     #file_path = "http://46.151.101.149:8081/?action=stream"
     
-    file_path = "http://46.151.101.149:8081/?action=stream"
+    file_path = "data/match.mp4"
 
+    writeToFile(file_path)
 
     if asyncVideo_flag : #Real time aynchronous frame tracking
         vid = VideoCaptureAsync(file_path)
@@ -72,11 +100,12 @@ def main(yolo):
     pts = [deque(maxlen=50) for _ in range(1000)]
 
     zones = [
-        DetectionZone("person",AABB(20,20,100,100))
-        ]
-
-    counter = []
-
+        DetectionZone("person",AABB(vid_width/3,2*vid_height/3,3*vid_width/6,3*vid_height/6)),
+        DetectionZone("person",AABB(700,500, 900, 300))
+    ]
+    cv2.namedWindow('output')
+    cv2.setMouseCallback('output',drawZone)
+    
     while True: #detections loop
         ret, img = vid.read()
         if ret != True:
@@ -85,8 +114,7 @@ def main(yolo):
 
         t1 = time.time()
 
-        #image = Image.fromarray(img[...,::-1])  # bgr to rgb
-        image = Image.fromarray(img[...])  # bgr to rgb
+        image = Image.fromarray(img[...,::-1])  # bgr to rgb
 
         boxes, confidence, classes = yolo.detect_image(image)
 
@@ -105,30 +133,28 @@ def main(yolo):
         indices = preprocessing.non_max_suppression(boxes, nms_max_overlap, scores)
         detections = [detections[i] for i in indices]
 
-
-  #      cmap = plt.get_cmap('tab20b')
-   #     colors = [cmap(i)[:3] for i in np.linspace(0,1,20)]
-
-        current_count = int(0)
-
         for det in detections:
-                bbox = det.to_tlbr()
-                #score = "%.2f" % round(det.confidence * 100, 2) + "%"
-                cv2.rectangle(img, (int(bbox[0]),int(bbox[1])), (int(bbox[2]),int(bbox[3])), (0, 200, 0), 2)
-                if len(classes) > 0: #Display the class name
-                    class_name= str(det.cls)
-                    cv2.rectangle(img, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name)*17), int(bbox[1])), (0, 200, 0), -1)
-                    cv2.putText(img, class_name, (int(bbox[0]), int(bbox[1]-10)), 0, 0.75,(255, 255, 255), 2)
-        
+            bbox = det.to_tlbr()
+            #score = "%.2f" % round(det.confidence * 100, 2) + "%"
+            cv2.rectangle(img, (int(bbox[0]),int(bbox[1])), (int(bbox[2]),int(bbox[3])), (0, 200, 0), 2)
+            if len(classes) > 0: #Display the class name
+                class_name= str(det.cls)
+                cv2.rectangle(img, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name)*17), int(bbox[1])), (0, 200, 0), -1)
+                cv2.putText(img, class_name, (int(bbox[0]), int(bbox[1]-10)), 0, 0.75,(255, 255, 255), 2)
+
         if tracking:
             tracker.predict()
             tracker.update(detections)
+
+            for zone in zones:
+                zone.draw_cv2(img)
 
             for track in tracker.tracks:
                 if not track.is_confirmed() or track.time_since_update >1:
                     continue
 
                 bbox = track.to_tlbr()
+                
                 cv2.putText(img, str(track.track_id), (int(bbox[0]+20), int(bbox[1]-10)), 0, 0.75,(0,0,0), 2)
 
                 center = (int(((bbox[0]) + (bbox[2]))/2), int(((bbox[1])+(bbox[3]))/2))
@@ -139,27 +165,24 @@ def main(yolo):
                         continue
                     thickness = int( max(1, 8*(j/len(pts[track.track_id]))))
                     cv2.line(img, (pts[track.track_id][j-1]), (pts[track.track_id][j]), (0,0,200), thickness)
-                
-                for zone in zones:
-                    zone.draw_cv2(img)
-        else:
-            for det in detections:
-                bbox = det.to_tlbr()
-                #score = "%.2f" % round(det.confidence * 100, 2) + "%"
-                cv2.rectangle(img, (int(bbox[0]),int(bbox[1])), (int(bbox[2]),int(bbox[3])), (0, 200, 0), 2)
-                if len(classes) > 0: #Display the class name
-                    class_name= str(det.cls)
-                    cv2.rectangle(img, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(len(class_name)*17), int(bbox[1])), (0, 200, 0), -1)
-                    cv2.putText(img, class_name, (int(bbox[0]), int(bbox[1]-10)), 0, 0.75,(255, 255, 255), 2)
 
+                centerV = Vector2(center[0],center[1])
+                for i,zone in enumerate(zones):
+                    if zone.checkInside("person",centerV):
+                        if not zone.knows(track.track_id):
+                            appendToFile("person "+str(int(track.track_id))+" entered zone "+str(i))
+                            zone.add(track.track_id)
+                    elif zone.knows(track.track_id):
+                        appendToFile("person "+str(int(track.track_id))+" left zone "+str(i))
+                        zone.remove(track.track_id)
+                            
 
-        total_count = len(set(counter))
-        cv2.putText(img, "Joueurs dans la zone: " + str(current_count), (0, 80), 0, 1, (0, 0, 255), 2)
-
-        appendToFile("The player got in the close zone")
+        for i,zone in enumerate(zones):
+            cv2.putText(img, "Persons in zone "+str(i)+" : "+str(zone.count()), (0, 80+ 40*i), 0, 1, (0, 0, 255), 2)
 
 
         fps = 1./(time.time()-t1)
+        print(len(zones))
         if asyncVideo_flag:
             cv2.putText(img, "Async FPS: {:.2f}".format(fps), (0,30), 0, 1, (0,0,255), 2)
         else:
@@ -187,10 +210,14 @@ def main(yolo):
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
+    np.random.seed(int(time.time()))
     main(YOLO())
 
-def appendToFile(info):
-    f = open("result/output.txt", "a") #Open the file in append mode
-    f.write(info+"\n")
-    f.close()
-    return
+
+
+#with jsonstreams.Stream(jsonstreams.Type.object, filename='foo') as s:
+#    s.write('foo', 'bar')
+#    with s.subobject('a') as a:
+#        a.write(1, 'foo')
+#        a.write(2, 'bar')
+#    s.write('bar', 'foo')
