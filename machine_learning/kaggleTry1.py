@@ -5,7 +5,7 @@ from datetime import datetime
 import time
 from sklearn.preprocessing import LabelEncoder
 
-df = pd.read_csv('machine_learning\csv\ATP.csv', low_memory=False)
+df = pd.read_csv('machine_learning\csv\ATP2000.csv', low_memory=False)
 #print(df.shape)
 #df.head()
 #df.info()
@@ -13,14 +13,32 @@ df = pd.read_csv('machine_learning\csv\ATP.csv', low_memory=False)
 
 
 # these variables do not seem relevant to me. might be assessed in a further work
-df = df.drop(columns=['tourney_id','tourney_name','tourney_date','match_num','winner_entry','loser_entry','winner_name','score','loser_name'])
+df = df.drop(columns=['tourney_id','tourney_name','tourney_date','match_num','winner_entry','loser_entry','winner_name','score','loser_name',
+                        'winner_seed','draw_size','winner_ht','winner_age','winner_rank_points',
+                        'loser_seed','loser_ht','loser_age','loser_rank_points','best_of','minutes',
+                        'w_ace','w_df','w_svpt','w_1stIn','w_1stWon','w_2ndWon','w_SvGms','w_bpSaved','w_bpFaced',
+                        'l_ace','l_df','l_svpt','l_1stIn','l_1stWon','l_2ndWon','l_SvGms','l_bpSaved','l_bpFaced',
+                        'winner_id',
+                        'loser_id',
+                        'surface',
+                        'tourney_level',
+                        'winner_hand',
+                        'loser_hand',
+                        'round',
+                        'winner_ioc',
+                        'loser_ioc'])
+
+# winner_hand, loser_hand
 
 # convert numeric varibales to the correct type (csv_read fct does not make auto convert)
-col_names_to_convert = ['winner_seed','draw_size','winner_ht','winner_age','winner_rank','winner_rank_points',
+col_names_to_convert = ['winner_rank', 'loser_rank']
+'''
+                        ,'winner_seed','draw_size','winner_ht','winner_age','winner_rank','winner_rank_points',
                         'loser_seed','loser_ht','loser_age','loser_rank','loser_rank_points','best_of','minutes',
                         'w_ace','w_df','w_svpt','w_1stIn','w_1stWon','w_2ndWon','w_SvGms','w_bpSaved','w_bpFaced',
                         'l_ace','l_df','l_svpt','l_1stIn','l_1stWon','l_2ndWon','l_SvGms','l_bpSaved','l_bpFaced'
                        ]
+'''
 
 for col_name in col_names_to_convert:
     df[col_name] = pd.to_numeric(df[col_name], errors='coerce')
@@ -36,10 +54,12 @@ df['target'] = np.zeros(df.shape[0], dtype = int)
 # generate data by switching among P1 and P2 (target will be P2)
 df2 = df.copy()
 # switch between variables from P1 and those from P2
-df2[['winner_id', 'winner_seed','winner_hand','winner_ht','winner_ioc','winner_age','winner_rank','winner_rank_points']] = df[['loser_id', 'loser_seed','loser_hand','loser_ht','loser_ioc','loser_age','loser_rank','loser_rank_points']]
-df2[['loser_id', 'loser_seed','loser_hand','loser_ht','loser_ioc','loser_age','loser_rank','loser_rank_points']] = df[['winner_id', 'winner_seed','winner_hand','winner_ht','winner_ioc','winner_age','winner_rank','winner_rank_points']]
-df2[['w_ace','w_df','w_svpt','w_1stIn','w_1stWon','w_2ndWon','w_SvGms','w_bpSaved','w_bpFaced']] = df[['l_ace','l_df','l_svpt','l_1stIn','l_1stWon','l_2ndWon','l_SvGms','l_bpSaved','l_bpFaced']]
-df2[['l_ace','l_df','l_svpt','l_1stIn','l_1stWon','l_2ndWon','l_SvGms','l_bpSaved','l_bpFaced']] = df[['w_ace','w_df','w_svpt','w_1stIn','w_1stWon','w_2ndWon','w_SvGms','w_bpSaved','w_bpFaced']]
+#df2[['winner_id', 'winner_seed','winner_hand','winner_ht','winner_ioc','winner_age','winner_rank','winner_rank_points']] = df[['loser_id', 'loser_seed','loser_hand','loser_ht','loser_ioc','loser_age','loser_rank','loser_rank_points']]
+#df2[['loser_id', 'loser_seed','loser_hand','loser_ht','loser_ioc','loser_age','loser_rank','loser_rank_points']] = df[['winner_id', 'winner_seed','winner_hand','winner_ht','winner_ioc','winner_age','winner_rank','winner_rank_points']]
+#df2[['w_ace','w_df','w_svpt','w_1stIn','w_1stWon','w_2ndWon','w_SvGms','w_bpSaved','w_bpFaced']] = df[['l_ace','l_df','l_svpt','l_1stIn','l_1stWon','l_2ndWon','l_SvGms','l_bpSaved','l_bpFaced']]
+#df2[['l_ace','l_df','l_svpt','l_1stIn','l_1stWon','l_2ndWon','l_SvGms','l_bpSaved','l_bpFaced']] = df[['w_ace','w_df','w_svpt','w_1stIn','w_1stWon','w_2ndWon','w_SvGms','w_bpSaved','w_bpFaced']]
+df2[['winner_rank']] = df[['loser_rank']]
+df2[['loser_rank']] = df[['winner_rank']]
 df2['target'] = np.ones(df2.shape[0], dtype = int)
 
 df = df.append(df2)
@@ -47,6 +67,7 @@ df = df.append(df2)
 #print(df.head(2).append(df.tail(2)))
 
 lb = LabelEncoder()
+'''
 df['surface'] = lb.fit_transform(df['surface'].astype(str))
 df['tourney_level'] = lb.fit_transform(df['tourney_level'].astype(str))
 df['winner_hand'] = lb.fit_transform(df['winner_hand'].astype(str))
@@ -54,6 +75,9 @@ df['loser_hand'] = lb.fit_transform(df['loser_hand'].astype(str))
 df['round'] = lb.fit_transform(df['round'].astype(str))
 df['winner_ioc'] = lb.fit_transform(df['winner_ioc'].astype(str))
 df['loser_ioc'] = lb.fit_transform(df['loser_ioc'].astype(str))
+'''
+df['winner_rank'] = lb.fit_transform(df['winner_rank'].astype(float))
+df['loser_rank'] = lb.fit_transform(df['loser_rank'].astype(float))
 
 # replace nan with 0 and infinity with large values
 df = df.fillna(df.median())

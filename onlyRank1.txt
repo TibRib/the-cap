@@ -1,0 +1,9 @@
+['loser_rank', 'winner_rank']
+[65.626 %] - AdaBoost
+[55.403 %] - Decision_Tree
+[87.516 %] - K_Near_Neighb
+[51.373 %] - Naive_Bayes
+[49.377 %] - Neural_Net
+[71.649 %] - Passive_Aggre
+[60.797 %] - Quad_Dis_Ana
+[57.293 %] - Random_Forest
