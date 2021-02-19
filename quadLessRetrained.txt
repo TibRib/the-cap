@@ -1,0 +1,8 @@
+['loser_age', 'loser_hand', 'loser_rank', 'surface', 'winner_age', 'winner_hand', 'winner_rank']
+[94.564 %] - AdaBoost
+[50.424 %] - Decision_Tree
+[62.142 %] - K_Near_Neighb
+[40.871 %] - Naive_Bayes
+[58.781 %] - Neural_Net
+[50.514 %] - Passive_Aggre
+[54.367 %] - Random_Forest

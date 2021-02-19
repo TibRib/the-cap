@@ -78,6 +78,7 @@ def printToFile(resultTxt, models_list, df, model_files):
     cptModel = 0
     text_file = open(resultTxt, "w")
     text_file.write('{}\n'.format(list(df.columns.values)))
+    list_of_percent = []
     for modelRes in totalResult:
         cpt = goodPred = badPred = 0
         for r in modelRes:
@@ -92,9 +93,10 @@ def printToFile(resultTxt, models_list, df, model_files):
             cpt += 1
         #text_file.write('[%s' % format(round(goodPred / (goodPred + badPred) * 100, 3)) + ' ]' % model_files[cptModel])
         perc = round(goodPred / (goodPred + badPred) * 100, 3)
+        list_of_percent.append(perc)
         print('[' + str(perc).zfill(6) + ' %]', model_files[cptModel])
         text_file.write('[{} %] - {}\n'.format(str(perc).zfill(6), model_files[cptModel][:-4]))
         cptModel += 1
+        return perc
 
-models, df, model_files = loadModelList()
-printToFile('firstMixRetrain_PassiveLess.txt', models, df, model_files)
+
