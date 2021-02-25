@@ -6,7 +6,7 @@ def trainSave():
     import time
     from sklearn.preprocessing import LabelEncoder
 
-    df = pd.read_csv('machine_learning\csv\ATP.csv', low_memory=False)
+    df = pd.read_csv('machine_learning/csv/ATP.csv', low_memory=False)
     #print(df.shape)
     #df.head()
     #df.info()
@@ -234,8 +234,8 @@ def loadModelList():
     from sklearn.preprocessing import LabelEncoder
 
 
-    df = pd.read_csv(r'machine_learning\csv\ATP.csv', low_memory=False)
-    resultDf = pd.read_csv(r'machine_learning\csv\ATP.csv', low_memory=False)
+    df = pd.read_csv(r'machine_learning/csv/ATP.csv', low_memory=False)
+    resultDf = pd.read_csv(r'machine_learning/csv/ATP.csv', low_memory=False)
 
     # these variables do not seem relevant to me. might be assessed in a further work
     df = df.drop(columns=['tourney_id','tourney_name','tourney_date','match_num','winner_entry','loser_entry','winner_name','score','loser_name',

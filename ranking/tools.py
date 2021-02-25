@@ -9,7 +9,7 @@ from ranking import *
 def useCSV(path):
     all = []
     # open file in read mode
-    with open('/home/azarog/Documents/the-cap/ranking/Rankings.csv', 'r') as read_obj:
+    with open('ranking/Rankings.csv', 'r') as read_obj:
         # pass the file object to reader() to get the reader object
         csv_reader = csv.reader(read_obj)
         # Iterate over each row in the csv using reader object
