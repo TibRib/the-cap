@@ -23,9 +23,6 @@ from tools import generate_detections as gdet
 import imutils.video
 from videocaptureasync import VideoCaptureAsync
 warnings.filterwarnings('ignore')
-
-import jsonstreams
-
 def appendToFile(info):
     f = open("result/output.txt", "a") #Open the file in append mode
     f.write(info+"\n")
@@ -41,6 +38,8 @@ def writeToFile(info):
 zones = []
 ix,iy = -1,-1
 
+yolo = YOLO()
+
 def drawZone(event,x,y,flags,param):
     global ix,iy,zones
     if event == cv2.EVENT_LBUTTONDOWN:
@@ -49,8 +48,9 @@ def drawZone(event,x,y,flags,param):
         newz = DetectionZone("person", AABB( ix, iy, x, y))
         zones.append( newz )
 
-def main(yolo):
-    global zones
+def run_detector(file_path, asyncVideo_flag, tracking=True, writeVideo_flag= True ):
+    global zones, yolo
+
     max_cosine_distance = 0.3
     nn_budget = None
     nms_max_overlap = 1.0
@@ -61,15 +61,7 @@ def main(yolo):
     metric = nn_matching.NearestNeighborDistanceMetric("cosine", max_cosine_distance, nn_budget)
     tracker = Tracker(metric)
 
-    #OpenCV properties + video input
-    tracking = True
-    writeVideo_flag = True
-    asyncVideo_flag = False
-
     #file_path = "http://46.151.101.149:8081/?action=stream"
-    
-    file_path = "data/match.mp4"
-
     writeToFile(file_path)
 
     if asyncVideo_flag : #Real time aynchronous frame tracking
@@ -206,15 +198,6 @@ def main(yolo):
 
     cv2.destroyAllWindows()
 
-if __name__ == '__main__':
-    np.random.seed(int(time.time()))
-    main(YOLO())
-
-
-
-#with jsonstreams.Stream(jsonstreams.Type.object, filename='foo') as s:
-#    s.write('foo', 'bar')
-#    with s.subobject('a') as a:
-#        a.write(1, 'foo')
-#        a.write(2, 'bar')
-#    s.write('bar', 'foo')
+#if __name__ == '__main__':
+#    np.random.seed(int(time.time()))
+#    main(YOLO())

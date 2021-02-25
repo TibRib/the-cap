@@ -13,7 +13,7 @@ export class VisualInterpreterQueryService {
 
   getResponse() : Observable<VisualInterpreterResponse>{
     let obs : Subject<VisualInterpreterResponse> = new Subject<VisualInterpreterResponse>();
-    this.http.get<VisualInterpreterResponse>("/visualAPI").subscribe( r => {
+    this.http.get<VisualInterpreterResponse>("/visualAPI/results").subscribe( r => {
       if(r){ obs.next(r)};
     })
 
